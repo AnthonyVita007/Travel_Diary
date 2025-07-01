@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Travel_Diary",
-    "slug": "Travel_Diary",
+    "slug": "travel-diary",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -24,6 +24,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "a02cf73a-120f-4236-8e66-a9c95ab5becf"
+      }
+    },
+    "owner": "andy_vita_1234"
   }
 }
