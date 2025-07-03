@@ -5,9 +5,9 @@ const { width } = Dimensions.get('window');
 const CARD_WIDTH = width * 0.9;
 const CARD_HEIGHT = CARD_WIDTH * 0.4;
 
-const TripCard = ({ trip, onPress }) => {
+const TripCard = ({ trip, handleTripPress }) => {
   return (
-    <Pressable style={styles.tripCard} onPress={() => onPress && onPress(trip)}>
+    <Pressable style={styles.tripCard} onPress={handleTripPress}>
       {/* container interno sx */}
       <View style={styles.leftContainer}>
         <Image

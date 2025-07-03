@@ -5,7 +5,7 @@ import SearchBar from '../components/searchBar';
 import tripCollectorA from '../data/mockupTrips'; // importa il tripCollector con i viaggi mock
 import NavBar from '../components/navBar';
 
-export default function HomeScreen() {
+export default function HomeScreen({ navigation }) { // <--- aggiungi navigation qui
   const [search, setSearch] = useState('');
 
   // Ottieni tutti i viaggi dal tripCollector
@@ -36,8 +36,14 @@ export default function HomeScreen() {
   const handleAddPress = () =>{
     Alert.alert('Add cliccata');
   }
-  //--------------------------------------------------------------------------------------------------------------------------
 
+  // Callback per quando si preme una TripCard
+  const handleTripPress = (trip) => {
+    navigation.navigate('TripDetailsScreen', { tripId: trip.id });
+    console.log("TRIP ID: ", trip.id);
+  };
+
+  //--------------------------------------------------------------------------------------------------------------------------
   return (
     <SafeAreaView style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'center', backgroundColor: '#eee' }}>
       {/* --- SearchBar nella parte alta --- */}
@@ -64,11 +70,12 @@ export default function HomeScreen() {
               category: trip.category,
               favorite: trip.favorite
             }}
-            onPress={trip => Alert.alert('Cliccato:', trip.title)}
+            handleTripPress={handleTripPress}
           />
         ))}
       </ScrollView>
 
+      {/* --- NavBar nella parte in basso --- */}
       <NavBar
         handleAddPress={handleAddPress}
         handleHomePress={handleHomePress}
