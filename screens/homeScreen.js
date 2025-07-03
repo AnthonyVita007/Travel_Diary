@@ -24,7 +24,7 @@ export default function HomeScreen({ navigation }) { // <--- aggiungi navigation
 
   // Callback icona Home
   const handleHomePress = () =>{
-    Alert.alert('Home cliccata');
+    navigation.navigate('HomeScreen');
   }
   
   // Callback icona Settings
@@ -40,7 +40,6 @@ export default function HomeScreen({ navigation }) { // <--- aggiungi navigation
   // Callback per quando si preme una TripCard
   const handleTripPress = (trip) => {
     navigation.navigate('TripDetailsScreen', { tripId: trip.id });
-    console.log("TRIP ID: ", trip.id);
   };
 
   //--------------------------------------------------------------------------------------------------------------------------
@@ -70,7 +69,7 @@ export default function HomeScreen({ navigation }) { // <--- aggiungi navigation
               category: trip.category,
               favorite: trip.favorite
             }}
-            handleTripPress={handleTripPress}
+            handleTripPress={() => handleTripPress(trip)}
           />
         ))}
       </ScrollView>
