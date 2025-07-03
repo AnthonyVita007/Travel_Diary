@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import HomeScreen from './screens/homeScreen';
 import TripDetailsScreen from './screens/tripDetailsScreen';
+import CreateTripScreen from './screens/createTripScreen';
 
 const Stack = createStackNavigator();
 
@@ -30,16 +31,26 @@ export default function App() {
           name="HomeScreen" 
           component={HomeScreen} 
           options={{ 
-            title: 'Viaggi',
+            title: 'My Trips',
           }} 
         />
+
         <Stack.Screen 
           name="TripDetailsScreen" 
           component={TripDetailsScreen} 
           options={{ 
-            title: 'Dettagli Viaggio',
+            title: 'Trip Details',
           }} 
         />
+
+        <Stack.Screen 
+          name="CreateTripScreen" 
+          component={CreateTripScreen} 
+          options={{ 
+            title: 'Add new Trip',
+          }} 
+        />
+
       </Stack.Navigator>
     </NavigationContainer>
   );

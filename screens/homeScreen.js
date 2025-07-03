@@ -33,9 +33,9 @@ export default function HomeScreen({ navigation }) { // <--- aggiungi navigation
   }
     
   // Callback icona Add
-  const handleAddPress = () =>{
-    Alert.alert('Add cliccata');
-  }
+  const handleAddPress = () => {
+    navigation.navigate('CreateTripScreen'); // Nota la C maiuscola, deve corrispondere esattamente al nome dello screen in App.js
+  };
 
   // Callback per quando si preme una TripCard
   const handleTripPress = (trip) => {
