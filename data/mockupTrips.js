@@ -2,7 +2,7 @@ import Trip from '../models/TripClass';
 import TripCollector from '../models/TripCollector';
 
 // Crea un TripCollector associato a un utente fittizio (ad esempio userId = 1)
-const tripCollector = new TripCollectorA(1);
+const tripCollectorA = new TripCollector(1);
 
 // Crea 10 viaggi di esempio
 const mockTrips = [

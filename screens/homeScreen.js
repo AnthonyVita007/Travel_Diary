@@ -3,6 +3,7 @@ import { SafeAreaView, Alert, View, ScrollView } from 'react-native';
 import TripCard from '../components/tripCard';
 import SearchBar from '../components/searchBar';
 import tripCollectorA from '../data/mockupTrips'; // importa il tripCollector con i viaggi mock
+import NavBar from '../components/navBar';
 
 export default function HomeScreen() {
   const [search, setSearch] = useState('');
@@ -10,6 +11,7 @@ export default function HomeScreen() {
   // Ottieni tutti i viaggi dal tripCollector
   const allTrips = tripCollectorA.getAllTrips();
 
+   //CALLBACKS
   // Callback per il pulsante di ricerca
   const handleSearch = () => {
     Alert.alert('Ricerca avviata', `Testo: ${search}`);
@@ -19,6 +21,22 @@ export default function HomeScreen() {
   const handleFilter = () => {
     Alert.alert('Filtri', 'Hai premuto il pulsante filtri');
   };
+
+  // Callback icona Home
+  const handleHomePress = () =>{
+    Alert.alert('Home cliccata');
+  }
+  
+  // Callback icona Settings
+  const handleSettingsPress = () =>{
+    Alert.alert('Settings cliccata');
+  }
+    
+  // Callback icona Add
+  const handleAddPress = () =>{
+    Alert.alert('Add cliccata');
+  }
+  //--------------------------------------------------------------------------------------------------------------------------
 
   return (
     <SafeAreaView style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'center', backgroundColor: '#eee' }}>
@@ -50,6 +68,13 @@ export default function HomeScreen() {
           />
         ))}
       </ScrollView>
+
+      <NavBar
+        handleAddPress={handleAddPress}
+        handleHomePress={handleHomePress}
+        handleSettingsPress={handleSettingsPress}
+      />
+
     </SafeAreaView>
   );
 }

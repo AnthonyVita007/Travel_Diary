@@ -1,15 +1,23 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, Dimensions, Pressable } from 'react-native';
 
+const { width } = Dimensions.get('window');
+const CARD_WIDTH = width * 0.9;
+const CARD_HEIGHT = CARD_WIDTH * 0.4;
+
 const TripCard = ({ trip, onPress }) => {
   return (
     <Pressable style={styles.tripCard} onPress={() => onPress && onPress(trip)}>
-      {/*container interno sx*/}
+      {/* container interno sx */}
       <View style={styles.leftContainer}>
-        <Image source={{ uri: trip.image }} style={styles.tripImage} />
+        <Image
+          source={{ uri: trip.image }}
+          style={styles.tripImage}
+          resizeMode="cover"
+        />
       </View>
 
-      {/*container interno dx*/}
+      {/* container interno dx */}
       <View style={styles.rightContainer}>
         <Text style={styles.title}>{trip.title}</Text>
         <View style={styles.datesContainer}>
@@ -21,16 +29,13 @@ const TripCard = ({ trip, onPress }) => {
   );
 };
 
-const { width } = Dimensions.get('window');
-const CARD_WIDTH = width * 0.9;
-const CARD_HEIGHT = CARD_WIDTH * 0.4;
-
 const styles = StyleSheet.create({
   tripCard: {
     width: CARD_WIDTH,
-    minHeight: CARD_HEIGHT,
+    height: CARD_HEIGHT,
     backgroundColor: '#fff',
-    borderRadius: 10,
+    borderRadius: 8,
+    overflow: 'hidden',
     elevation: 4,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -40,35 +45,32 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     alignSelf: 'center',
-    padding: 12,
     marginTop: 5,
   },
   leftContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 2,
+    width: CARD_HEIGHT,
+    height: CARD_HEIGHT,
+    overflow: 'hidden',
+    justifyContent: 'left',
+    alignItems: 'left',
+    marginRight: 20,
+    padding: 0,
   },
   tripImage: {
-    width: CARD_HEIGHT * 0.5,
-    height: CARD_HEIGHT * 0.5,
-    borderRadius: (CARD_HEIGHT * 0.5) / 2,
-    borderWidth: 0,
-    borderColor: 'transparent',
+    width: '100%',
+    height: '100%',
     backgroundColor: '#ddd',
-    padding: 30,
-    marginLeft: 15,
   },
   rightContainer: {
     flex: 1,
-    padding: 30,
-    marginLeft: 15,
+    justifyContent: 'center',
+    paddingVertical: 8,
   },
   title: {
     fontSize: 18,
     fontWeight: 'bold',
     color: '#222',
     textAlign: 'left',
-    marginTop: 4,
     marginBottom: 8,
   },
   datesContainer: {
