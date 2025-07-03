@@ -28,7 +28,7 @@ const CARD_HEIGHT = CARD_WIDTH * 0.4;
 const styles = StyleSheet.create({
   tripCard: {
     width: CARD_WIDTH,
-    height: CARD_HEIGHT,
+    minHeight: CARD_HEIGHT,
     backgroundColor: '#fff',
     borderRadius: 10,
     elevation: 4,
