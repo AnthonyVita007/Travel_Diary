@@ -1,15 +1,17 @@
 import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import categories from '../models/categories';
+import categories, { getCategoriesArray } from '../models/categories';
 
 const CategoryBox = ({selectedCategories, onToggleCategory }) => {
+  // Ottieni l'array di categorie escludendo 'None'
+  const categoriesArray = getCategoriesArray().filter(category => category.id !== 9);
 
   return (
     <View style={styles.container}>
       <Text style={styles.label}>Categories (optional)</Text>
       <View style={styles.categoriesContainer}>
-        {categories.filter(category => category.id !== 9).map((category) => {
+        {categoriesArray.map((category) => {
             // Verifica se la categoria è selezionata
             const isSelected = selectedCategories.some(cat => cat.id === category.id);
             

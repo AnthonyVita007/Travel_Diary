@@ -27,7 +27,7 @@ export default function CreateTripScreen({ navigation }) {
   const [departureDate, setDepartureDate] = useState('');
   const [returnDate, setReturnDate] = useState('');
   const [description, setDescription] = useState('');
-  const [location, setLocation] = useState(''); // Nuovo stato per il campo Location
+  const [location, setLocation] = useState('');
   const [selectedCategories, setSelectedCategories] = useState([]); // Array per gestire multiple categorie
 
   // --- Funzione per gestire la selezione/deselezione di una categoria ---
