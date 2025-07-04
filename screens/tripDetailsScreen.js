@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, Dimensions, SafeAreaView, ScrollView } from 'react-native';
-import tripCollectorA from '../data/mockupTrips';
+import tripCollectorA from '../data/tripsDataManagment';
 
 // Ottiene la larghezza dello schermo e definisce la dimensione dell'immagine
 const { width } = Dimensions.get('window');

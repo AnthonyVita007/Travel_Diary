@@ -32,6 +32,7 @@ export default function App() {
           component={HomeScreen} 
           options={{ 
             title: 'My Trips',
+            headerLeft: null,
           }} 
         />
 
@@ -48,6 +49,7 @@ export default function App() {
           component={CreateTripScreen} 
           options={{ 
             title: 'Add new Trip',
+            headerLeft: null,
           }} 
         />
 

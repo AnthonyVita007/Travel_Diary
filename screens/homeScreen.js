@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { SafeAreaView, Alert, View, ScrollView } from 'react-native';
 import TripCard from '../components/tripCard';
 import SearchBar from '../components/searchBar';
-import tripCollectorA from '../data/mockupTrips'; // importa il tripCollector con i viaggi mock
+import tripCollectorA from '../data/tripsDataManagment'; // importa il tripCollector con i viaggi mock
 import NavBar from '../components/navBar';
 
 export default function HomeScreen({ navigation }) { // <--- aggiungi navigation qui
@@ -20,21 +20,6 @@ export default function HomeScreen({ navigation }) { // <--- aggiungi navigation
   // Callback per il pulsante dei filtri
   const handleFilter = () => {
     Alert.alert('Filtri', 'Hai premuto il pulsante filtri');
-  };
-
-  // Callback icona Home
-  const handleHomePress = () =>{
-    navigation.navigate('HomeScreen');
-  }
-  
-  // Callback icona Settings
-  const handleSettingsPress = () =>{
-    Alert.alert('Settings cliccata');
-  }
-    
-  // Callback icona Add
-  const handleAddPress = () => {
-    navigation.navigate('CreateTripScreen'); // Nota la C maiuscola, deve corrispondere esattamente al nome dello screen in App.js
   };
 
   // Callback per quando si preme una TripCard
@@ -75,11 +60,7 @@ export default function HomeScreen({ navigation }) { // <--- aggiungi navigation
       </ScrollView>
 
       {/* --- NavBar nella parte in basso --- */}
-      <NavBar
-        handleAddPress={handleAddPress}
-        handleHomePress={handleHomePress}
-        handleSettingsPress={handleSettingsPress}
-      />
+      <NavBar/>
 
     </SafeAreaView>
   );

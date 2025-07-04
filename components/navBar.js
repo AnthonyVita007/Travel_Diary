@@ -1,8 +1,31 @@
 import React from 'react';
-import { View, StyleSheet, Pressable, Dimensions } from 'react-native';
+import { View, StyleSheet, Pressable, Dimensions, Alert } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const NavBar = ({ handleHomePress, handleSettingsPress, handleAddPress }) => {
+const NavBar = () => {
+  //inizializzazione di un navigator
+  const navigation = useNavigation();
+
+   //----------------------------------------------------------------------------------------------------------------------
+  //CALLBACKS
+  // Callback icona Home
+  const handleHomePress = () =>{
+    navigation.navigate('HomeScreen');
+  }
+  
+  // Callback icona Settings
+  const handleSettingsPress = () =>{
+    Alert.alert('Settings cliccata');
+  }
+    
+  // Callback icona Add
+  const handleAddPress = () => {
+    navigation.navigate('CreateTripScreen');
+  };
+
+  //----------------------------------------------------------------------------------------------------------------------
+  //RENDERING DEL COMPONENT
   return (
     <View style={styles.container}>
       {/* Settings Icon (left) */}

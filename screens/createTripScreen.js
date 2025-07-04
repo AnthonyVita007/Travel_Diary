@@ -7,11 +7,13 @@ import {
   ScrollView, 
   SafeAreaView,
   TouchableOpacity,
-  Pressable 
+  Pressable, 
+  Alert
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Trip from '../models/TripClass';
-import TripCollector from '../models/TripCollector';
+import tripCollectorA from '../data/tripsDataManagment';
+import NavBar from '../components/navBar';
 
 // --- Definizione delle categorie disponibili ---
 const categories = [
@@ -42,6 +44,8 @@ const categories = [
 ];
 
 export default function CreateTripScreen({ navigation }) {
+
+  //FUNZIONI E CALLBACKS
   // --- Stati per gestire i valori dei campi ---
   const [title, setTitle] = useState('');
   const [imageUri, setImageUri] = useState('');
@@ -53,13 +57,46 @@ export default function CreateTripScreen({ navigation }) {
   // --- Funzione per gestire il salvataggio del viaggio ---
   const handleSaveTrip = () => {
     console.log("Saving trip...");
-    // TODO: Implementare la logica di salvataggio
+
+    //creazione del viaggio da aggiungere
+    const tripToAdd = new Trip(
+         16,
+        title,           
+        imageUri,        
+        departureDate,   
+        returnDate,      
+        description,     
+        selectedCategory?.name || '',
+        false
+      )
+    
+    //aggiunta del viaggio alla lista dei viaggi 
+    tripCollectorA.addTrip(tripToAdd);
+    Alert.alert('Messagge', 'trip correctly saved');
+
+    //reset del form
+    resetForm();
+
+    //navigazione verso la HomeScreen con refresh per mostrare il nuovo viaggio
+    navigation.navigate('HomeScreen', { refresh: Date.now() });
   };
 
-  // --- Render principale ---
+  // --- Funzione per il reset del form
+  const resetForm = () => {
+      setTitle('');
+      setImageUri('');
+      setDepartureDate('');
+      setReturnDate('');
+      setDescription('');
+      setSelectedCategory(null);
+  };
+
+  //-------------------------------------------------------------------------------------------------------
+  //RENDERING DELLA PAGINA
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView}>
+
         {/* Container principale */}
         <View style={styles.mainContainer}>
           
@@ -149,9 +186,11 @@ export default function CreateTripScreen({ navigation }) {
           <TouchableOpacity style={styles.saveButton} onPress={handleSaveTrip}>
             <Text style={styles.saveButtonText}>Salva Viaggio</Text>
           </TouchableOpacity>
-
         </View>
       </ScrollView>
+
+      {/*navBar*/}
+      <NavBar/>
     </SafeAreaView>
   );
 }
