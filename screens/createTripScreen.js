@@ -19,7 +19,7 @@ import NavBar from '../components/navBar';
 const categories = [
   {
     id: 1,
-    name: 'Natura',
+    name: 'Nature',
     icon: 'leaf',
     color: '#4CAF50' // verde
   },
@@ -40,6 +40,30 @@ const categories = [
     name: 'City Life',
     icon: 'city',
     color: '#87CEEB' // celeste
+  },
+  {
+    id: 5,
+    name: 'Beach',
+    icon: 'beach',
+    color: '#1E90FF' // blu intenso
+  },
+  {
+    id: 6,
+    name: 'Mountain',
+    icon: 'hiking',
+    color: '#708090' // grigio ardesia
+  },
+  {
+    id: 7,
+    name: 'Culture',
+    icon: 'book',
+    color: '#9370DB' // viola medio
+  },
+  {
+    id: 8,
+    name: 'Food & Wine',
+    icon: 'food-fork-drink',
+    color: '#FF6347' // rosso pomodoro
   }
 ];
 
@@ -72,7 +96,7 @@ export default function CreateTripScreen({ navigation }) {
     
     //aggiunta del viaggio alla lista dei viaggi 
     tripCollectorA.addTrip(tripToAdd);
-    Alert.alert('Messagge', 'trip correctly saved');
+    Alert.alert('Message', 'Trip successfully saved');
 
     //reset del form
     resetForm();
@@ -107,7 +131,7 @@ export default function CreateTripScreen({ navigation }) {
               style={styles.input}
               value={title}
               onChangeText={setTitle}
-              placeholder="Inserisci il titolo del viaggio"
+              placeholder="Enter trip title"
             />
 
             <Text style={styles.label}>Image URL</Text>
@@ -115,7 +139,7 @@ export default function CreateTripScreen({ navigation }) {
               style={styles.input}
               value={imageUri}
               onChangeText={setImageUri}
-              placeholder="Inserisci l'URL dell'immagine"
+              placeholder="Enter image URL"
             />
 
             <Text style={styles.label}>Departure Date</Text>
@@ -171,12 +195,12 @@ export default function CreateTripScreen({ navigation }) {
 
           {/* Sezione descrizione */}
           <View style={styles.descriptionSection}>
-            <Text style={styles.label}>Descrizione</Text>
+            <Text style={styles.label}>Description</Text>
             <TextInput
               style={styles.descriptionInput}
               value={description}
               onChangeText={setDescription}
-              placeholder="Inserisci la descrizione del viaggio"
+              placeholder="Enter trip description"
               multiline
               numberOfLines={4}
             />
@@ -184,7 +208,7 @@ export default function CreateTripScreen({ navigation }) {
 
           {/* Pulsante salva */}
           <TouchableOpacity style={styles.saveButton} onPress={handleSaveTrip}>
-            <Text style={styles.saveButtonText}>Salva Viaggio</Text>
+            <Text style={styles.saveButtonText}>Save Trip</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

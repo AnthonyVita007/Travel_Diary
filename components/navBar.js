@@ -1,11 +1,13 @@
 import React from 'react';
-import { View, StyleSheet, Pressable, Dimensions, Alert } from 'react-native';
+import { View, StyleSheet, Pressable, Dimensions, Alert, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const NavBar = () => {
   //inizializzazione di un navigator
   const navigation = useNavigation();
+  const insets = useSafeAreaInsets();
 
    //----------------------------------------------------------------------------------------------------------------------
   //CALLBACKS
@@ -27,7 +29,12 @@ const NavBar = () => {
   //----------------------------------------------------------------------------------------------------------------------
   //RENDERING DEL COMPONENT
   return (
-    <View style={styles.container}>
+    <View style={[
+      styles.container,
+      {
+        paddingBottom: Math.max(insets.bottom, Platform.OS === 'android' ? 25 : 0)
+      }
+    ]}>
       {/* Settings Icon (left) */}
       <Pressable onPress={handleSettingsPress} style={styles.iconContainer}>
         <Icon name="settings" style={styles.icon} />
@@ -57,6 +64,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderColor: '#e5e5e5',
     elevation: 10,
+    paddingTop: 10,
   },
   iconContainer: {
     flex: 1,
