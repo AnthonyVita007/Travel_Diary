@@ -25,12 +25,31 @@ export default function CreateTripScreen({ navigation }) {
   const [departureDate, setDepartureDate] = useState('');
   const [returnDate, setReturnDate] = useState('');
   const [description, setDescription] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedCategories, setSelectedCategories] = useState([]); // Array per gestire multiple categorie
+
+  // --- Funzione per gestire la selezione/deselezione di una categoria ---
+  const handleCategoryToggle = (category) => {
+    // Controlla se la categoria premuta è già selezionata
+    const isSelected = selectedCategories.some(cat => cat.id === category.id);
+    
+    if (isSelected) {
+      // Se è selezionata, rimuovila (senza restrizioni)
+      setSelectedCategories(selectedCategories.filter(cat => cat.id !== category.id));
+    } else {
+      // Se non è selezionata, aggiungila all'array
+      setSelectedCategories([...selectedCategories, category]);
+    }
+  };
 
   // --- Funzione per gestire il salvataggio del viaggio ---
   const handleSaveTrip = () => {
     console.log("Saving trip...");
 
+    // Ottieni i nomi delle categorie selezionate o usa "none" se nessuna è selezionata
+    const categoryNames = selectedCategories.length > 0 
+      ? selectedCategories.map(cat => cat.name).join(', ')
+      : "none";
+    
     //creazione del viaggio da aggiungere
     const tripToAdd = new Trip(
          16,
@@ -39,7 +58,7 @@ export default function CreateTripScreen({ navigation }) {
         departureDate,   
         returnDate,      
         description,     
-        selectedCategory?.name || '',
+        categoryNames, // Usa i nomi delle categorie o "none"
         false
       )
     
@@ -61,7 +80,7 @@ export default function CreateTripScreen({ navigation }) {
       setDepartureDate('');
       setReturnDate('');
       setDescription('');
-      setSelectedCategory(null);
+      setSelectedCategories([]); // Reset dell'array di categorie
   };
 
   //-------------------------------------------------------------------------------------------------------
@@ -110,36 +129,44 @@ export default function CreateTripScreen({ navigation }) {
 
           {/* Sezione categorie */}
           <View style={styles.categorySection}>
-            <Text style={styles.label}>Category</Text>
+            <Text style={styles.label}>Categories (optional)</Text>
             <View style={styles.categoriesContainer}>
-              {categories.map((category) => (
-                <Pressable
-                  key={category.id}
-                  style={[
-                    styles.categoryItem,
-                    { borderColor: category.color },
-                    selectedCategory?.id === category.id && {
-                      backgroundColor: category.color
-                    }
-                  ]}
-                  onPress={() => setSelectedCategory(category)}
-                >
-                  <Icon 
-                    name={category.icon} 
-                    size={24} 
-                    color={selectedCategory?.id === category.id ? '#fff' : category.color}
-                  />
-                  <Text 
+              {categories.map((category) => {
+                // Verifica se la categoria è selezionata
+                const isSelected = selectedCategories.some(cat => cat.id === category.id);
+                
+                return (
+                  <Pressable
+                    key={category.id}
                     style={[
-                      styles.categoryText,
-                      { color: selectedCategory?.id === category.id ? '#fff' : category.color }
+                      styles.categoryItem,
+                      { borderColor: category.color },
+                      isSelected && {
+                        backgroundColor: category.color
+                      }
                     ]}
+                    onPress={() => handleCategoryToggle(category)}
                   >
-                    {category.name}
-                  </Text>
-                </Pressable>
-              ))}
+                    <Icon 
+                      name={category.icon} 
+                      size={24} 
+                      color={isSelected ? '#fff' : category.color}
+                    />
+                    <Text 
+                      style={[
+                        styles.categoryText,
+                        { color: isSelected ? '#fff' : category.color }
+                      ]}
+                    >
+                      {category.name}
+                    </Text>
+                  </Pressable>
+                );
+              })}
             </View>
+            {selectedCategories.length === 0 && (
+              <Text style={styles.infoText}>No categories selected, if you leave it empty your trip will have no category</Text>
+            )}
           </View>
 
           {/* Sezione descrizione */}
@@ -168,7 +195,7 @@ export default function CreateTripScreen({ navigation }) {
   );
 }
 
-// --- Stili del componente ---
+// --- Stili del componente --- (aggiunto stile per infoText)
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -220,6 +247,12 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     fontSize: 14,
     fontWeight: '600',
+  },
+  infoText: {
+    fontSize: 14,
+    color: '#666',
+    fontStyle: 'italic',
+    marginTop: 8,
   },
   descriptionSection: {
     marginBottom: 20,
