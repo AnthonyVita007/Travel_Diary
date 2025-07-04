@@ -31,9 +31,18 @@ export default function CreateTripScreen({ navigation }) {
   const handleSaveTrip = () => {
     console.log("Saving trip...");
 
+    // Validazione base
+    if (!title.trim()) {
+      Alert.alert('Error', 'Please enter a trip title');
+      return;
+    }
+
+    // Genera un ID univoco basato sul timestamp
+    const newTripId = Date.now();
+
     //creazione del viaggio da aggiungere
     const tripToAdd = new Trip(
-         16,
+        newTripId,
         title,           
         imageUri,        
         departureDate,   

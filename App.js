@@ -5,6 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from './screens/homeScreen';
 import TripDetailsScreen from './screens/tripDetailsScreen';
 import CreateTripScreen from './screens/createTripScreen';
+import ModifyTripScreen from './screens/modifyTripScreen';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 const Stack = createStackNavigator();
@@ -52,6 +53,14 @@ export default function App() {
             options={{ 
               title: 'Add new Trip',
               headerLeft: null,
+            }} 
+          />
+
+          <Stack.Screen 
+            name="ModifyTripScreen" 
+            component={ModifyTripScreen} 
+            options={{ 
+              title: 'Edit Trip',
             }} 
           />
 

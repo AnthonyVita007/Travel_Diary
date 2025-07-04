@@ -1,12 +1,13 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, Dimensions, SafeAreaView, ScrollView } from 'react-native';
+import { View, Text, Image, StyleSheet, Dimensions, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native';
 import tripCollectorA from '../data/tripsDataManagment';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 // Ottiene la larghezza dello schermo e definisce la dimensione dell'immagine
 const { width } = Dimensions.get('window');
 const IMAGE_SIZE = width * 0.38;
 
-export default function TripDetailsScreen({ route }) {
+export default function TripDetailsScreen({ route, navigation }) {
   // Estrae l'ID del viaggio dai parametri di navigazione
   const { tripId } = route.params;
   // Recupera il trip dal tripCollector usando l'id
@@ -52,6 +53,15 @@ export default function TripDetailsScreen({ route }) {
             <Text style={styles.descLabel}>Descrizione</Text>
             <Text style={styles.description}>{trip.description}</Text>
           </View>
+
+          {/* --- Pulsante per modificare il viaggio --- */}
+          <TouchableOpacity 
+            style={styles.editButton}
+            onPress={() => navigation.navigate('ModifyTripScreen', { tripId: trip.id })}
+          >
+            <Icon name="pencil" size={20} color="#fff" />
+            <Text style={styles.editButtonText}>Edit Trip</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -139,5 +149,21 @@ const styles = StyleSheet.create({
     fontSize: 17,
     alignSelf: 'center',
     marginTop: 50,
+  },
+  // Stile pulsante edit
+  editButton: {
+    backgroundColor: '#007AFF',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 16,
+    borderRadius: 8,
+    marginTop: 25,
+  },
+  editButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginLeft: 8,
   },
 });
