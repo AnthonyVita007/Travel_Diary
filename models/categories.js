@@ -48,6 +48,12 @@ export const categories = [
     name: 'Food & Wine',
     icon: 'food-fork-drink',
     color: '#FF6347' // rosso pomodoro
+  },
+  {
+    id: 9,
+    name: 'None',
+    icon: 'close',
+    color: 'gray'
   }
 ];
 

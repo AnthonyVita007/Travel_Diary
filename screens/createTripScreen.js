@@ -10,14 +10,16 @@ import {
   Pressable, 
   Alert
 } from 'react-native';
-import categories from '../models/categories';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Trip from '../models/TripClass';
 import tripCollectorA from '../data/tripsDataManagment';
 import NavBar from '../components/navBar';
+import InputBox from '../components/inputBox';
+import CategoryBox from '../components/categoryBox';
 
 export default function CreateTripScreen({ navigation }) {
 
+  //------------------------------------------------------------------------------------------------------------------------------------
   //FUNZIONI E CALLBACKS
   // --- Stati per gestire i valori dei campi ---
   const [title, setTitle] = useState('');
@@ -25,6 +27,7 @@ export default function CreateTripScreen({ navigation }) {
   const [departureDate, setDepartureDate] = useState('');
   const [returnDate, setReturnDate] = useState('');
   const [description, setDescription] = useState('');
+  const [location, setLocation] = useState(''); // Nuovo stato per il campo Location
   const [selectedCategories, setSelectedCategories] = useState([]); // Array per gestire multiple categorie
 
   // --- Funzione per gestire la selezione/deselezione di una categoria ---
@@ -56,7 +59,8 @@ export default function CreateTripScreen({ navigation }) {
         title,           
         imageUri,        
         departureDate,   
-        returnDate,      
+        returnDate,
+        location, // Aggiunto il nuovo campo location      
         description,     
         categoryNames, // Usa i nomi delle categorie o "none"
         false
@@ -80,6 +84,7 @@ export default function CreateTripScreen({ navigation }) {
       setDepartureDate('');
       setReturnDate('');
       setDescription('');
+      setLocation(''); // Reset del campo location
       setSelectedCategories([]); // Reset dell'array di categorie
   };
 
@@ -89,98 +94,24 @@ export default function CreateTripScreen({ navigation }) {
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView}>
 
-        {/* Container principale */}
+         {/* Container principale */}
         <View style={styles.mainContainer}>
           
           {/* Sezione input di testo */}
           <View style={styles.inputSection}>
-            <Text style={styles.label}>Title</Text>
-            <TextInput
-              style={styles.input}
-              value={title}
-              onChangeText={setTitle}
-              placeholder="Enter trip title"
-            />
-
-            <Text style={styles.label}>Image URL</Text>
-            <TextInput
-              style={styles.input}
-              value={imageUri}
-              onChangeText={setImageUri}
-              placeholder="Enter image URL"
-            />
-
-            <Text style={styles.label}>Departure Date</Text>
-            <TextInput
-              style={styles.input}
-              value={departureDate}
-              onChangeText={setDepartureDate}
-              placeholder="YYYY-MM-DD"
-            />
-
-            <Text style={styles.label}>Return Date</Text>
-            <TextInput
-              style={styles.input}
-              value={returnDate}
-              onChangeText={setReturnDate}
-              placeholder="YYYY-MM-DD"
-            />
+            <InputBox label="Title" value={title} onChangeText={setTitle} placeholder="Enter trip title"/>
+            <InputBox label="Image URL" value={imageUri} onChangeText={setImageUri} placeholder="Enter image URL" />
+            <InputBox label="Location" value={location} onChangeText={setLocation} placeholder="Enter trip location" />
+            <InputBox label="Departure Date" value={departureDate} onChangeText={setDepartureDate} placeholder="YYYY-MM-DD" />
+            <InputBox label="Return Date" value={returnDate} onChangeText={setReturnDate} placeholder="YYYY-MM-DD" />
+            <InputBox label="Description" value={description} onChangeText={setDescription} placeholder="Enter trip description" multiline={true} numberOfLines={4} />
           </View>
 
           {/* Sezione categorie */}
-          <View style={styles.categorySection}>
-            <Text style={styles.label}>Categories (optional)</Text>
-            <View style={styles.categoriesContainer}>
-              {categories.map((category) => {
-                // Verifica se la categoria è selezionata
-                const isSelected = selectedCategories.some(cat => cat.id === category.id);
-                
-                return (
-                  <Pressable
-                    key={category.id}
-                    style={[
-                      styles.categoryItem,
-                      { borderColor: category.color },
-                      isSelected && {
-                        backgroundColor: category.color
-                      }
-                    ]}
-                    onPress={() => handleCategoryToggle(category)}
-                  >
-                    <Icon 
-                      name={category.icon} 
-                      size={24} 
-                      color={isSelected ? '#fff' : category.color}
-                    />
-                    <Text 
-                      style={[
-                        styles.categoryText,
-                        { color: isSelected ? '#fff' : category.color }
-                      ]}
-                    >
-                      {category.name}
-                    </Text>
-                  </Pressable>
-                );
-              })}
-            </View>
-            {selectedCategories.length === 0 && (
-              <Text style={styles.infoText}>No categories selected, if you leave it empty your trip will have no category</Text>
-            )}
-          </View>
-
-          {/* Sezione descrizione */}
-          <View style={styles.descriptionSection}>
-            <Text style={styles.label}>Description</Text>
-            <TextInput
-              style={styles.descriptionInput}
-              value={description}
-              onChangeText={setDescription}
-              placeholder="Enter trip description"
-              multiline
-              numberOfLines={4}
-            />
-          </View>
+          <CategoryBox 
+            selectedCategories={selectedCategories} 
+            onToggleCategory={handleCategoryToggle} 
+          />
 
           {/* Pulsante salva */}
           <TouchableOpacity style={styles.saveButton} onPress={handleSaveTrip}>
@@ -195,7 +126,8 @@ export default function CreateTripScreen({ navigation }) {
   );
 }
 
-// --- Stili del componente --- (aggiunto stile per infoText)
+//----------------------------------------------------------------------------------------------------------------------------------------
+// STILI
 const styles = StyleSheet.create({
   container: {
     flex: 1,
