@@ -32,7 +32,7 @@ const NavBar = () => {
     <View style={[
       styles.container,
       {
-        paddingBottom: Math.max(insets.bottom, Platform.OS === 'android' ? 25 : 0)
+        paddingBottom: insets.bottom + 5,
       }
     ]}>
       {/* Settings Icon (left) */}
@@ -55,7 +55,7 @@ const NavBar = () => {
 
 const styles = StyleSheet.create({
   container: {
-    height: Dimensions.get('window').height*0.08,
+    minHeight: Dimensions.get('window').height*0.08,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
