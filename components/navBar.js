@@ -18,7 +18,7 @@ const NavBar = () => {
   
   // Callback icona Settings
   const handleSettingsPress = () =>{
-    Alert.alert('Settings cliccata');
+    navigation.navigate('SettingsScreen');
   }
     
   // Callback icona Add
