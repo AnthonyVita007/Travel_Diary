@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 const Button = ({handleSaveTrip}) => {
     return(
