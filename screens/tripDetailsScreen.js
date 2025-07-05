@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, Image, StyleSheet, Dimensions, SafeAreaView, ScrollView } from 'react-native';
+import React, { useState, useLayoutEffect } from 'react';
+import { View, Text, Image, StyleSheet, Dimensions, SafeAreaView, ScrollView, Pressable } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import tripCollectorA from '../data/tripsDataManagment';
 import categories from '../models/categories';
@@ -8,15 +8,15 @@ import categories from '../models/categories';
 const { width } = Dimensions.get('window');
 const IMAGE_SIZE = width * 0.42;
 
-export default function TripDetailsScreen({ route }) {
+export default function TripDetailsScreen({ route, navigation }) {
   
   //---------------------------------------------------------------------------------------------------
-  //FUNZIONI E CALLBACKS
-  const { tripId } = route.params; // Estrae l'ID del viaggio dai parametri di navigazione
-  const trip = tripCollectorA.getTrip(tripId); // Recupera il trip dal tripCollector usando l'id
+  // INDIVIDUAZIONE DEL VIAGGIO DA MOSTRARE E GESTIONE ERRORE
+  const { tripId } = route.params; 
+  const initialTrip = tripCollectorA.getTrip(tripId); 
 
   // --- Gestione caso di errore: viaggio non trovato ---
-  if (!trip) {
+  if (!initialTrip) {
     return (
       <SafeAreaView style={styles.container}>
         <Text style={styles.errorText}>Trip not found.</Text>
@@ -24,21 +24,69 @@ export default function TripDetailsScreen({ route }) {
     );
   }
 
+  //---------------------------------------------------------------------------------------------------
+  // STATE E FUNZIONI PER LA GESTIONE DELLA UI
+  
+  // Stato per gestire il viaggio e forzare il re-rendering
+  const [trip, setTrip] = useState(initialTrip);
+  // Stato per forzare l'aggiornamento quando cambia lo stato di "favorite"
+  const [isFavorite, setIsFavorite] = useState(trip.favorite);
+
+  // Funzione per gestire il toggle dei preferiti
+  const handleToggleFavorite = () => {
+    // 1. Chiama il metodo sull'istanza originale. Questo modifica l'oggetto
+    //    nel tripCollectorA.
+    trip.toggleFavorite(); 
+    
+    // 2. Aggiorna lo stato locale 'isFavorite'. Questo è necessario
+    //    per dire a React che deve ri-eseguire l'effetto e quindi ri-renderizzare
+    //    l'icona della stella
+    setIsFavorite(trip.favorite);
+  };
+
+  // Funzione per la gestione del press sull'icona edit di un viaggio
+  const handleEditPress = () => {
+    navigation.navigate('ModifyTripScreen', { tripId: trip.id });
+  };
+  
+  //---------------------------------------------------------------------------------------------------
+  // PERSONALIZZAZIONE DELL'HEADER DELLA PAGINA
+
+  //gestione icona favorites e icona editTrip
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Pressable onPress={handleEditPress} style={{ marginRight: 15 }}>
+            <Icon name="square-edit-outline" size={28} color="#333" />
+          </Pressable>
+          <Pressable onPress={handleToggleFavorite} style={{ marginRight: 15 }}>
+            <Icon 
+              name={isFavorite ? 'star' : 'star-outline'} 
+              size={28} 
+              color={isFavorite ? '#FFD700' : '#888'} 
+            />
+          </Pressable>
+        </View>
+      ),
+    });
+  }, [navigation, isFavorite]);
+
+  //---------------------------------------------------------------------------------------------------
+  //FUNZIONI DI SUPPORTO
+
   // Funzione per ottenere gli oggetti categoria dal loro nome
   const getTripCategories = () => {
-    // Se non ci sono categorie o la categoria è vuota, mostra "None"
     if (!trip.category || trip.category === "" || trip.category.toLowerCase() === "none") {
-      return [categories['None']]; // Restituisci un array con solo la categoria "None"
+      return [categories['None']]; 
     }
     
     const categoryNames = trip.category.split(', ');
     
-    // Filtra le categorie valide (esistenti nella mappa delle categorie)
     const validCategories = categoryNames
       .filter(name => name && categories[name])
       .map(name => categories[name]);
     
-    // Se dopo il filtraggio non ci sono categorie valide, mostra "None"
     if (validCategories.length === 0) {
       return [categories['None']];
     }
@@ -46,87 +94,93 @@ export default function TripDetailsScreen({ route }) {
     return validCategories;
   };
 
-  // Ottiene le categorie del viaggio come array di oggetti categories
   const tripCategories = getTripCategories();
 
-  //----------------------------------------------------------------------------------------------------
-  //RENDER GRAFICO
-  return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scroll}>
-        {/* --- Container principale che contiene tutte le sezioni --- */}
-        <View style={styles.mainContainer}>
-          {/* --- Header con immagine di sfondo --- */}
-          <View style={styles.headerContainer}>
-            <Image
-              source={{ uri: trip.imageUri }}
-              style={styles.headerImage}
-              resizeMode="cover"
-            />
-            <View style={styles.titleOverlay}>
-              <Text style={styles.titleHeader}>{trip.title}</Text>
-              <Text style={styles.locationText}>{trip.Location}</Text>
-            </View>
-          </View>
-
-          {/* --- Sezione informazioni principali --- */}
-          <View style={styles.infoCard}>
-            {/* --- Sezione date del viaggio migliorata --- */}
-            <View style={styles.datesContainer}>
-              <Text style={styles.sectionTitle}>Trip Dates</Text>
-              
-              <View style={styles.dateRow}>
-                <View style={styles.dateIconContainer}>
-                  <Icon name="airplane-takeoff" size={22} color="#4CAF50" />
-                </View>
-                <View style={styles.dateTextContainer}>
-                  <Text style={styles.dateLabel}>Departure</Text>
-                  <Text style={styles.dateValue}>{trip.departureDate}</Text>
-                </View>
-              </View>
-              
-              <View style={styles.dateDivider}>
-                <View style={styles.dateDividerLine} />
-                <Icon name="dots-vertical" size={20} color="#ddd" />
-                <View style={styles.dateDividerLine} />
-              </View>
-              
-              <View style={styles.dateRow}>
-                <View style={styles.dateIconContainer}>
-                  <Icon name="airplane-landing" size={22} color="#F44336" />
-                </View>
-                <View style={styles.dateTextContainer}>
-                  <Text style={styles.dateLabel}>Return</Text>
-                  <Text style={styles.dateValue}>{trip.returnDate}</Text>
-                </View>
-              </View>
-            </View>
-
-            {/* --- Sezione categorie --- */}
-            <View style={styles.categoriesContainer}>
-              <Text style={styles.sectionTitle}>Categories</Text>
-              <View style={styles.categoriesList}>
-                {tripCategories.map((category, index) => (
-                  <View 
-                    key={index} 
-                    style={[styles.categoryChip, { backgroundColor: category.color }]}
-                  >
-                    <Icon name={category.icon} size={16} color="#fff" />
-                    <Text style={styles.categoryText}>{category.name}</Text>
-                  </View>
-                ))}
-              </View>
-            </View>
-
-            {/* --- Sezione descrizione viaggio --- */}
-            <View style={styles.descContainer}>
-              <Text style={styles.sectionTitle}>Description</Text>
-              <Text style={styles.description}>{trip.description}</Text>
-            </View>
+//----------------------------------------------------------------------------------------------------
+//RENDER GRAFICO
+return (
+  <SafeAreaView style={styles.container}>
+    <ScrollView contentContainerStyle={styles.scroll}>
+      {/* --- Container principale che avvolge l'intera schermata --- */}
+      <View style={styles.mainContainer}>
+        
+        {/* --- Sezione Header: contiene l'immagine principale del viaggio --- */}
+        <View style={styles.headerContainer}>
+          <Image
+            source={{ uri: trip.imageUri }}
+            style={styles.headerImage}
+            resizeMode="cover"
+          />
+          {/* --- Overlay sull'immagine: contiene titolo e località del viaggio --- */}
+          <View style={styles.titleOverlay}>
+            <Text style={styles.titleHeader}>{trip.title}</Text>
+            <Text style={styles.locationText}>{trip.Location}</Text>
           </View>
         </View>
-      </ScrollView>
-    </SafeAreaView>
+
+        {/* --- Card informativa: raggruppa tutti i dettagli testuali del viaggio --- */}
+        <View style={styles.infoCard}>
+
+          {/* --- Sotto-sezione: Date del Viaggio --- */}
+          <View style={styles.datesContainer}>
+            <Text style={styles.sectionTitle}>Trip Dates</Text>
+            
+            {/* Riga per la data di partenza */}
+            <View style={styles.dateRow}>
+              <View style={styles.dateIconContainer}>
+                <Icon name="airplane-takeoff" size={22} color="#4CAF50" />
+              </View>
+              <View style={styles.dateTextContainer}>
+                <Text style={styles.dateLabel}>Departure</Text>
+                <Text style={styles.dateValue}>{trip.departureDate}</Text>
+              </View>
+            </View>
+            
+            {/* Divisore visuale tra le due date */}
+            <View style={styles.dateDivider}>
+              <View style={styles.dateDividerLine} />
+              <Icon name="dots-vertical" size={20} color="#ddd" />
+              <View style={styles.dateDividerLine} />
+            </View>
+            
+            {/* Riga per la data di ritorno */}
+            <View style={styles.dateRow}>
+              <View style={styles.dateIconContainer}>
+                <Icon name="airplane-landing" size={22} color="#F44336" />
+              </View>
+              <View style={styles.dateTextContainer}>
+                <Text style={styles.dateLabel}>Return</Text>
+                <Text style={styles.dateValue}>{trip.returnDate}</Text>
+              </View>
+            </View>
+          </View>
+
+          {/* --- Sotto-sezione: Categorie associate al viaggio --- */}
+          <View style={styles.categoriesContainer}>
+            <Text style={styles.sectionTitle}>Categories</Text>
+            <View style={styles.categoriesList}>
+              {/* Mappa le categorie del viaggio e le mostra come blocchetti colorati */}
+              {tripCategories.map((category, index) => (
+                <View 
+                  key={index} 
+                  style={[styles.categoryChip, { backgroundColor: category.color }]}
+                >
+                  <Icon name={category.icon} size={16} color="#fff" />
+                  <Text style={styles.categoryText}>{category.name}</Text>
+                </View>
+              ))}
+            </View>
+          </View>
+
+          {/* --- Sotto-sezione: Descrizione dettagliata del viaggio --- */}
+          <View style={styles.descContainer}>
+            <Text style={styles.sectionTitle}>Description</Text>
+            <Text style={styles.description}>{trip.description}</Text>
+          </View>
+        </View>
+      </View>
+    </ScrollView>
+  </SafeAreaView>
   );
 }
 

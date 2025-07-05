@@ -16,7 +16,7 @@ import tripCollectorA from '../data/tripsDataManagment';
 import NavBar from '../components/navBar';
 import InputBox from '../components/inputBox';
 import CategoryBox from '../components/categoryBox';
-import Button from '../models/button';
+import Button from '../components/button';
 
 export default function CreateTripScreen({ navigation }) {
 
