@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#f0f0f0',
   },
-  // Stili migliorati per la sezione date
+  // Stili per la sezione date
   datesContainer: {
     marginBottom: 25,
   },

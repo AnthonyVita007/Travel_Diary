@@ -16,6 +16,7 @@ import tripCollectorA from '../data/tripsDataManagment';
 import NavBar from '../components/navBar';
 import InputBox from '../components/inputBox';
 import CategoryBox from '../components/categoryBox';
+import Button from '../models/button';
 
 export default function CreateTripScreen({ navigation }) {
 
@@ -114,9 +115,7 @@ export default function CreateTripScreen({ navigation }) {
           />
 
           {/* Pulsante salva */}
-          <TouchableOpacity style={styles.saveButton} onPress={handleSaveTrip}>
-            <Text style={styles.saveButtonText}>Save Trip</Text>
-          </TouchableOpacity>
+          <Button handleSaveTrip={handleSaveTrip}/>
         </View>
       </ScrollView>
 
@@ -197,17 +196,5 @@ const styles = StyleSheet.create({
     textAlignVertical: 'top',
     borderWidth: 1,
     borderColor: '#ddd',
-  },
-  saveButton: {
-    backgroundColor: '#007AFF',
-    padding: 16,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: 20,
-  },
-  saveButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
   },
 });
