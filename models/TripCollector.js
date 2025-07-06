@@ -15,7 +15,7 @@ export default class TripCollector {
   }
 
   //------------------------------------------------------------------------------------------------
-  //METODI PER IL SALVATAGGIO DATI CON ASYNC-STORAGE
+  //METODI CHE COMPRENDONO L'USO DI ASYNC-STORAGE PER IL SALVATAGGIO DATI
   /**
    * Salva la mappa dei viaggi in modo persistente su AsyncStorage.
    * È un'operazione asincrona (non blocca l'app).
@@ -35,7 +35,7 @@ export default class TripCollector {
 
   /**
    * Inizializza il TripCollector: carica i viaggi da AsyncStorage e popola la mappa.
-   * Da chiamare all'avvio dell'app.
+   * Chiamata all'avvio dell'app.
    */
   async initializeTripCollector() {
     try {
@@ -84,17 +84,16 @@ export default class TripCollector {
   
   /**
    * Metodo per forzare il salvataggio dopo una modifica diretta.
-   * (es. quando cambiamo lo stato 'favorite' di un viaggio).
    */
   updateTrip(trip) {
     if (this.trips.has(trip.id)) {
         this.trips.set(trip.id, trip); // Ci assicuriamo che l'oggetto in mappa sia quello aggiornato
-        this.saveTripsPersistent(); // <-- SALVATAGGIO AUTOMATICO
+        this.saveTripsPersistent(); // salvataggio in memoria
     }
   }
 
 //------------------------------------------------------------------------------------------------------
-//METODI PER LA GESTIONE DELLA CLASSE TripCollector
+//METODI CHE NON COMPRENDONO ASYNC-STORAGE
   getTrip(tripId) {
     return this.trips.get(tripId);
   }
