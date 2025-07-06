@@ -42,6 +42,9 @@ export default function TripDetailsScreen({ route, navigation }) {
     //    per dire a React che deve ri-eseguire l'effetto e quindi ri-renderizzare
     //    l'icona della stella
     setIsFavorite(trip.favorite);
+
+    // 3. Notifica al collector di salvare la modifica dello stato 'favorite'.
+    tripCollectorA.updateTrip(trip);
   };
 
   // Funzione per la gestione del press sull'icona edit di un viaggio

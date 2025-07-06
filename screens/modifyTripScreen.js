@@ -81,6 +81,8 @@ export default function ModifyTripScreen({ route, navigation }) {
       ? selectedCategories.map(cat => cat.name).join(', ')
       : "None";
 
+      tripCollectorA.updateTrip(tripToModify);
+
     // Mostra un messaggio di conferma
     Alert.alert('Success', 'Trip updated successfully!');
     navigation.navigate('HomeScreen', { refresh: Date.now() });
