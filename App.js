@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
@@ -8,9 +8,17 @@ import CreateTripScreen from './screens/createTripScreen';
 import ModifyTripScreen from './screens/modifyTripScreen'; // <-- IMPORTA LA NUOVA SCREEN
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import {initDbTables} from './database/database';
+
 const Stack = createStackNavigator();
 
 export default function App() {
+
+  //Inizializzazione delle tabelle del db
+  useEffect(() => {
+      initDbTables();
+  }, []);
+
   return (
     <SafeAreaProvider>
       <NavigationContainer>

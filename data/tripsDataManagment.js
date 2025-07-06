@@ -123,5 +123,3 @@ mockTrips.forEach(trip => tripCollectorA.addTrip(trip));
 
 // Esporta il tripCollector pronto all'uso
 export default tripCollectorA;
-
-//AGGIUNGERE LOGICA CHE QUANDO CAMBIA UNO DEI VIAGGI NELLA COLLECTION, AGGIORNA IL DB
