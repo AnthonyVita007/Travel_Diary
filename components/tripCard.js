@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     alignSelf: 'center',
-    marginTop: 5,
+    marginTop: 2,
   },
   leftContainer: {
     width: CARD_HEIGHT,

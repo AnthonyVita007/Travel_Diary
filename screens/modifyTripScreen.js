@@ -86,6 +86,29 @@ export default function ModifyTripScreen({ route, navigation }) {
     navigation.navigate('HomeScreen', { refresh: Date.now() });
   };
 
+  // --- Funzione per gestire l'eliminazione del un viaggio ---
+  const handleDeleteTrip = () => {
+    Alert.alert(
+    "Are you sure?",
+    "The trip will be gone forever!",
+    [
+      {
+        text: "No",
+        onPress: () => console.log("Operazione annullata"),
+        style: "cancel"
+      },
+      {
+        text: "Yes",
+        onPress: () => {
+                          tripCollectorA.removeTrip(tripToModify.id);;
+                          navigation.navigate('HomeScreen', { refresh: Date.now() });
+                       },
+        style: "destructive"
+      }
+    ]
+  );
+  }
+
   //----------------------------------------------------------------------------------------------------
   //RENDER GRAFICO
   return (
@@ -112,7 +135,17 @@ export default function ModifyTripScreen({ route, navigation }) {
           />
 
           {/* --- Pulsante di salvataggio --- */}
-          <Button handleSaveTrip={handleSaveChanges}
+          <Button 
+            handleButtonPress={handleSaveChanges}
+            buttonColor={'#007AFF'}
+            text={'Update Trip'}            
+          />
+
+          {/* --- Pulsante per l'eliminazione del viaggio --- */}
+          <Button
+            handleButtonPress={handleDeleteTrip}
+            buttonColor={'red'}
+            text={'Delete Trip'}
           />
         </View>
       </ScrollView>

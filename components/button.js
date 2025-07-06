@@ -1,22 +1,22 @@
 import { Text, StyleSheet, TouchableOpacity } from 'react-native';
 
-const Button = ({handleSaveTrip}) => {
+const Button = ({handleButtonPress, buttonColor, text}) => {
     return(
-        <TouchableOpacity style={styles.saveButton} onPress={handleSaveTrip}>
-            <Text style={styles.saveButtonText}>Save Trip</Text>
+        <TouchableOpacity 
+        style={[styles.button, {backgroundColor: buttonColor }]}  onPress={handleButtonPress}>
+            <Text style={styles.buttonText}>{text}</Text>
         </TouchableOpacity>
     );
 };
 
 const styles = StyleSheet.create({
-  saveButton: {
-    backgroundColor: '#007AFF',
+  button: {
     padding: 16,
     borderRadius: 8,
     alignItems: 'center',
     marginTop: 20,
   },
-  saveButtonText: {
+  buttonText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',

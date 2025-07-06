@@ -115,7 +115,11 @@ export default function CreateTripScreen({ navigation }) {
           />
 
           {/* Pulsante salva */}
-          <Button handleSaveTrip={handleSaveTrip}/>
+          <Button 
+            handleButtonPress={handleSaveTrip}
+            text={'Save Trip'}
+            buttonColor={'#007AFF'}
+          />
         </View>
       </ScrollView>
 
