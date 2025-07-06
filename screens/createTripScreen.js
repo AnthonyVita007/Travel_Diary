@@ -56,7 +56,7 @@ export default function CreateTripScreen({ navigation }) {
     
     //creazione del viaggio da aggiungere
     const tripToAdd = new Trip(
-         16,
+        tripCollectorA.getNextId(),
         title,           
         imageUri,        
         departureDate,   
@@ -66,7 +66,8 @@ export default function CreateTripScreen({ navigation }) {
         categoryNames, // Usa i nomi delle categorie o "none"
         false
       )
-    
+    console.log(tripToAdd.id);
+
     //aggiunta del viaggio alla lista dei viaggi 
     tripCollectorA.addTrip(tripToAdd);
     Alert.alert('Message', 'Trip successfully saved');

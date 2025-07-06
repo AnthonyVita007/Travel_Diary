@@ -12,6 +12,7 @@ export default class TripCollector {
   constructor(userId) {
     this.userId = userId;
     this.trips = new Map(); // La mappa dei viaggi in memoria, inizialmente vuota.
+    this.nextId = 1;
   }
 
   //------------------------------------------------------------------------------------------------
@@ -39,22 +40,20 @@ export default class TripCollector {
    */
   async initializeTripCollector() {
     try {
-      // 1. Prova a leggere la stringa dal telefono usando la nostra etichetta.
       const jsonValue = await AsyncStorage.getItem(TRIPS_KEY);
-      
-      // 2. Se la stringa esiste (non è null)...
       if (jsonValue !== null) {
-        // ...la riconvertiamo in un Array di oggetti.
         const tripsArray = JSON.parse(jsonValue);
-        
-        // 3. Per ogni oggetto, creiamo una vera istanza della classe Trip
-        //    e la aggiungiamo alla nostra mappa in memoria.
         tripsArray.forEach(obj => {
           const trip = new Trip(obj.id, obj.title, obj.imageUri, obj.departureDate, obj.returnDate, obj.Location, obj.description, obj.category, obj.favorite);
           this.trips.set(trip.id, trip);
         });
+        
+        if (tripsArray.length > 0) {
+            // Trova il massimo id per il prossimo auto-increment
+            const maxId = tripsArray.reduce((max, obj) => Math.max(max, obj.id), 0);
+            this.nextId = maxId + 1;
+        }
       }
-      // Se non esiste (primo avvio), la mappa rimane semplicemente vuota.
     } catch (e) {
       console.error("Errore nel caricare i viaggi:", e);
     }
@@ -94,6 +93,14 @@ export default class TripCollector {
 
 //------------------------------------------------------------------------------------------------------
 //METODI CHE NON COMPRENDONO ASYNC-STORAGE
+  
+  /**
+   * Restituisce un ID unico e incrementa il contatore per il prossimo.
+   */
+  getNextId() {
+    return this.nextId++;
+  }
+
   getTrip(tripId) {
     return this.trips.get(tripId);
   }
