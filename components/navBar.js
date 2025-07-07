@@ -17,9 +17,9 @@ const NavBar = () => {
   }
   
   // Callback icona Settings
-  const handleSettingsPress = () =>{
-    Alert.alert('Settings cliccata');
-  }
+    const handleStatsPress = () =>{
+    navigation.navigate('StatsScreen');
+}
     
   // Callback icona Add
   const handleAddPress = () => {
@@ -35,9 +35,9 @@ const NavBar = () => {
         paddingBottom: insets.bottom + 5,
       }
     ]}>
-      {/* Settings Icon (left) */}
-      <Pressable onPress={handleSettingsPress} style={styles.iconContainer}>
-        <Icon name="settings" style={styles.icon} />
+      {/* Stats Icon (left) */}
+      <Pressable onPress={handleStatsPress} style={styles.iconContainer}>
+        <Icon name="globe" style={styles.icon} />
       </Pressable>
 
       {/* Home Icon (center) */}

@@ -8,6 +8,7 @@ import HomeScreen from './screens/homeScreen';
 import TripDetailsScreen from './screens/tripDetailsScreen';
 import CreateTripScreen from './screens/createTripScreen';
 import ModifyTripScreen from './screens/modifyTripScreen';
+import StatsScreen from './screens/statsScreen';
 
 // Importiamo il font dell'header
 import { useFonts, FontdinerSwanky_400Regular } from '@expo-google-fonts/fontdiner-swanky';
@@ -96,6 +97,11 @@ export default function App() {
             name="ModifyTripScreen" 
             component={ModifyTripScreen} 
             options={{ title: 'Edit Trip' }} 
+          />
+          <Stack.Screen 
+            name="StatsScreen" 
+            component={StatsScreen} 
+            options={{ title: 'My World Map' }} 
           />
         </Stack.Navigator>
       </NavigationContainer>
