@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, Alert, View, ScrollView, Text } from 'react-native';
+import { SafeAreaView, Alert, View, ScrollView, Text, Dimensions } from 'react-native';
 import TripCard from '../components/tripCard';
 import SearchBar from '../components/searchBar';
 import tripCollectorA from '../data/tripsDataManagment'; // importa il tripCollector con i viaggi mock
 import NavBar from '../components/navBar';
 import CustomHeader from '../components/customHeader';
+import NoTripsAlert from '../components/noTripsAlert';
 
 export default function HomeScreen({ navigation }) { // <--- aggiungi navigation qui
   //FUNZIONI E CALLBACKS
@@ -48,37 +49,48 @@ export default function HomeScreen({ navigation }) { // <--- aggiungi navigation
       {/* Header personalizzato */}
       <CustomHeader />
 
-      {/* --- SearchBar nella parte alta --- */}
-      <View style={{ width: '95%', marginTop: 24 }}>
-        <SearchBar
-          value={search}
-          onChangeText={setSearch}
-          onFilterPress={handleFilter}
-        />
-      </View>
+      {/* --- SearchBar nella parte alta (solo se ci sono viaggi) --- */}
+      {allTrips.length > 0 && (
+        <View style={{ width: '95%', marginTop: 24 }}>
+          <SearchBar
+            value={search}
+            onChangeText={setSearch}
+            onFilterPress={handleFilter}
+            placeholder="Search trips..."
+          />
+        </View>
+      )}
 
-      {/* --- Lista di TripCard --- */}
+      {/* --- Lista di TripCard oppure messaggio/card se non ci sono viaggi --- */}
       <ScrollView contentContainerStyle={{ alignItems: 'center', paddingBottom: 30, width: '100%' }}>
-        {filteredTrips.length > 0 ? (
-          filteredTrips.map(trip => (
-            <TripCard
-              key={trip.id}
-              trip={{
-                id: trip.id,
-                title: trip.title,
-                image: trip.imageUri,
-                departureDate: trip.departureDate,
-                returnDate: trip.returnDate,
-                category: trip.category,
-                favorite: trip.favorite
-              }}
-              handleTripPress={() => handleTripPress(trip)}
-            />
-          ))
+        {allTrips.length === 0 ? (
+          // --- Mostra NoTripsAlert se non ci sono viaggi disponibili ---
+          <View style={{flex: 1, width: '100%', height: Dimensions.get('window').height * 0.6, justifyContent: 'center', alignItems: 'center'}}>
+            <NoTripsAlert handlePress={() => navigation.navigate('CreateTripScreen')} />
+          </View>
         ) : (
-          <Text style={{ marginTop: 30, fontSize: 16, color: '#666' }}>
-            Nessun viaggio corrisponde alla tua ricerca
-          </Text>
+          // --- Altrimenti deve mostrare tutte le tripCard salvate ---
+          filteredTrips.length > 0 ? (
+            filteredTrips.map(trip => (
+              <TripCard
+                key={trip.id}
+                trip={{
+                  id: trip.id,
+                  title: trip.title,
+                  image: trip.imageUri,
+                  departureDate: trip.departureDate,
+                  returnDate: trip.returnDate,
+                  category: trip.category,
+                  favorite: trip.favorite
+                }}
+                handleTripPress={() => handleTripPress(trip)}
+              />
+            ))
+          ) : (
+            <Text style={{ marginTop: 30, fontSize: 16, color: '#666' }}>
+              No trips match your search
+            </Text>
+          )
         )}
       </ScrollView>
 
