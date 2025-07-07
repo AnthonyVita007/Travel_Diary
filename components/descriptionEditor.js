@@ -3,12 +3,15 @@ import { View, Text, TextInput, StyleSheet, Pressable } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const DescriptionEditor = ({ label, value, onChangeText, placeholder, maxLength = 3000 }) => {
+
+  //------------------------------------------------------------------------------------------------------------------------------------
+  //STATI E VARIABILI
   const [isFocused, setIsFocused] = useState(false);
   const [selection, setSelection] = useState({ start: 0, end: 0 });
   const [errorMessage, setErrorMessage] = useState('');
 
-  //---------------------------------------------------------------------------------------------------
-  // FUNZIONI PER LA GESTIONE DELLA FORMATTAZIONE DEL TESTO
+  //------------------------------------------------------------------------------------------------------------------------------------
+  //FUNZIONI E CALLBACKS
 
   // --- Funzione per controllare se il testo selezionato è già formattato ---
   const checkExistingFormatting = (format, start, end) => {
@@ -115,9 +118,8 @@ const DescriptionEditor = ({ label, value, onChangeText, placeholder, maxLength 
     return checkExistingFormatting(format, start, end);
   };
 
-  //---------------------------------------------------------------------------------------------------
-  // RENDERING DEL COMPONENTE
-
+  //-------------------------------------------------------------------------------------------------------
+  //RENDERING DELLA PAGINA
   return (
     <View style={styles.container}>
       <Text style={styles.label}>{label}</Text>
@@ -208,9 +210,8 @@ const DescriptionEditor = ({ label, value, onChangeText, placeholder, maxLength 
   );
 };
 
-//---------------------------------------------------------------------------------------------------
-// STILI DEL COMPONENTE
-
+//----------------------------------------------------------------------------------------------------------------------------------------
+// STILI
 const styles = StyleSheet.create({
   container: {
     marginBottom: 16,

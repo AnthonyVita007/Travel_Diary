@@ -4,9 +4,15 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const DatePickerInput = ({ label, value, onDateChange, minimumDate, placeholder }) => {
+
+  //------------------------------------------------------------------------------------------------------------------------------------
+  //STATI E VARIABILI
   const [showPicker, setShowPicker] = useState(false);
 
-  // Funzione per gestire la selezione della data
+  //------------------------------------------------------------------------------------------------------------------------------------
+  //FUNZIONI E CALLBACKS
+
+  // --- Funzione per gestire la selezione della data ---
   const handleDateChange = (event, selectedDate) => {
     setShowPicker(Platform.OS === 'ios'); // Su iOS il picker rimane aperto
     if (selectedDate) {
@@ -16,15 +22,19 @@ const DatePickerInput = ({ label, value, onDateChange, minimumDate, placeholder 
     }
   };
 
-  // Converte la stringa della data in oggetto Date per il picker
+  // --- Converte la stringa della data in oggetto Date per il picker ---
   const getDateFromString = (dateString) => {
     if (!dateString) return new Date();
     return new Date(dateString + 'T00:00:00');
   };
 
+  //-------------------------------------------------------------------------------------------------------
+  //RENDERING DELLA PAGINA
   return (
     <View style={styles.container}>
       <Text style={styles.label}>{label}</Text>
+      
+      {/* --- Container dell'input con icona calendario --- */}
       <Pressable style={styles.inputContainer} onPress={() => setShowPicker(true)}>
         <TextInput
           style={styles.input}
@@ -36,6 +46,7 @@ const DatePickerInput = ({ label, value, onDateChange, minimumDate, placeholder 
         <Icon name="calendar" size={24} color="#666" style={styles.icon} />
       </Pressable>
       
+      {/* --- DateTimePicker nativo che appare quando necessario --- */}
       {showPicker && (
         <DateTimePicker
           value={getDateFromString(value)}
@@ -49,6 +60,8 @@ const DatePickerInput = ({ label, value, onDateChange, minimumDate, placeholder 
   );
 };
 
+//----------------------------------------------------------------------------------------------------------------------------------------
+// STILI
 const styles = StyleSheet.create({
   container: {
     marginBottom: 16,

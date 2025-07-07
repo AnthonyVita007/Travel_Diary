@@ -33,6 +33,9 @@ export default function TripDetailsScreen({ route, navigation }) {
   // Stato per forzare l'aggiornamento quando cambia lo stato di "favorite"
   const [isFavorite, setIsFavorite] = useState(trip.favorite);
 
+  //------------------------------------------------------------------------------------------------------------------------------------
+  //FUNZIONI E CALLBACKS
+
   // Funzione per gestire il toggle dei preferiti
   const handleToggleFavorite = () => {
     // 1. Chiama il metodo sull'istanza originale. Questo modifica l'oggetto
@@ -52,6 +55,27 @@ export default function TripDetailsScreen({ route, navigation }) {
   const handleEditPress = () => {
     navigation.navigate('ModifyTripScreen', { tripId: trip.id });
   };
+
+  // Funzione per ottenere gli oggetti categoria dal loro nome
+  const getTripCategories = () => {
+    if (!trip.category || trip.category === "" || trip.category.toLowerCase() === "none") {
+      return [categories['None']]; 
+    }
+    
+    const categoryNames = trip.category.split(', ');
+    
+    const validCategories = categoryNames
+      .filter(name => name && categories[name])
+      .map(name => categories[name]);
+    
+    if (validCategories.length === 0) {
+      return [categories['None']];
+    }
+    
+    return validCategories;
+  };
+
+  const tripCategories = getTripCategories();
   
   //---------------------------------------------------------------------------------------------------
   // PERSONALIZZAZIONE DELL'HEADER DELLA PAGINA
@@ -75,30 +99,6 @@ export default function TripDetailsScreen({ route, navigation }) {
       ),
     });
   }, [navigation, isFavorite]);
-
-  //---------------------------------------------------------------------------------------------------
-  //FUNZIONI DI SUPPORTO
-
-  // Funzione per ottenere gli oggetti categoria dal loro nome
-  const getTripCategories = () => {
-    if (!trip.category || trip.category === "" || trip.category.toLowerCase() === "none") {
-      return [categories['None']]; 
-    }
-    
-    const categoryNames = trip.category.split(', ');
-    
-    const validCategories = categoryNames
-      .filter(name => name && categories[name])
-      .map(name => categories[name]);
-    
-    if (validCategories.length === 0) {
-      return [categories['None']];
-    }
-    
-    return validCategories;
-  };
-
-  const tripCategories = getTripCategories();
 
 //----------------------------------------------------------------------------------------------------
 //RENDER GRAFICO

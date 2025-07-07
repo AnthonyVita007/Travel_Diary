@@ -3,6 +3,9 @@ import { View, Text, TextInput, StyleSheet, Pressable } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const LocationInput = ({ label, value, onLocationChange, placeholder }) => {
+
+  //------------------------------------------------------------------------------------------------------------------------------------
+  //STATI E VARIABILI
   const [query, setQuery] = useState(value);
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -10,7 +13,10 @@ const LocationInput = ({ label, value, onLocationChange, placeholder }) => {
   // API key per OpenCage (puoi usare quella già presente nel progetto)
   const GEOCODING_API_KEY = '31119a4918f8431c95786c225f787420';
 
-  // Funzione per cercare le località utilizzando l'API di geocoding
+  //------------------------------------------------------------------------------------------------------------------------------------
+  //FUNZIONI E CALLBACKS
+
+  // --- Funzione per cercare le località utilizzando l'API di geocoding ---
   const searchLocations = async (text) => {
     if (text.length < 3) {
       setSuggestions([]);
@@ -38,6 +44,27 @@ const LocationInput = ({ label, value, onLocationChange, placeholder }) => {
     }
   };
 
+  // --- Funzione per gestire la selezione di una località ---
+  const handleLocationSelect = (location) => {
+    setQuery(location.name);
+    onLocationChange(location.name);
+    setShowSuggestions(false);
+    setSuggestions([]);
+  };
+
+  // --- Funzione per gestire il cambio di testo ---
+  const handleTextChange = (text) => {
+    setQuery(text);
+    if (text.length === 0) {
+      onLocationChange('');
+      setShowSuggestions(false);
+      setSuggestions([]);
+    }
+  };
+
+  //------------------------------------------------------------------------------------------------------------------------------------
+  //EFFECTS
+
   // Effect per gestire la ricerca con debounce
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -49,27 +76,13 @@ const LocationInput = ({ label, value, onLocationChange, placeholder }) => {
     return () => clearTimeout(timer);
   }, [query]);
 
-  // Funzione per gestire la selezione di una località
-  const handleLocationSelect = (location) => {
-    setQuery(location.name);
-    onLocationChange(location.name);
-    setShowSuggestions(false);
-    setSuggestions([]);
-  };
-
-  // Funzione per gestire il cambio di testo
-  const handleTextChange = (text) => {
-    setQuery(text);
-    if (text.length === 0) {
-      onLocationChange('');
-      setShowSuggestions(false);
-      setSuggestions([]);
-    }
-  };
-
+  //-------------------------------------------------------------------------------------------------------
+  //RENDERING DELLA PAGINA
   return (
     <View style={styles.container}>
       <Text style={styles.label}>{label}</Text>
+      
+      {/* --- Container dell'input con icona posizione --- */}
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
@@ -81,7 +94,7 @@ const LocationInput = ({ label, value, onLocationChange, placeholder }) => {
         <Icon name="map-marker" size={24} color="#666" style={styles.icon} />
       </View>
       
-      {/* Lista suggerimenti senza FlatList - usa mapping semplice */}
+      {/* --- Lista suggerimenti senza FlatList - usa mapping semplice --- */}
       {showSuggestions && suggestions.length > 0 && (
         <View style={styles.suggestionsContainer}>
           <View style={styles.suggestionsList}>
@@ -104,6 +117,8 @@ const LocationInput = ({ label, value, onLocationChange, placeholder }) => {
   );
 };
 
+//----------------------------------------------------------------------------------------------------------------------------------------
+// STILI
 const styles = StyleSheet.create({
   container: {
     marginBottom: 16,
