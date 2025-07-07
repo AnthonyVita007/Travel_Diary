@@ -1,6 +1,7 @@
 import React, { useState, useLayoutEffect } from 'react';
 import { View, Text, Image, StyleSheet, Dimensions, SafeAreaView, ScrollView, Pressable } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Markdown from 'react-native-markdown-display'; // <-- NUOVO IMPORT
 import tripCollectorA from '../data/tripsDataManagment';
 import categories from '../models/categories';
 
@@ -175,10 +176,13 @@ return (
             </View>
           </View>
 
-          {/* --- Sotto-sezione: Descrizione dettagliata del viaggio --- */}
+          {/* --- Sotto-sezione: Descrizione dettagliata del viaggio con supporto Markdown --- */}
           <View style={styles.descContainer}>
             <Text style={styles.sectionTitle}>Description</Text>
-            <Text style={styles.description}>{trip.description}</Text>
+            {/* Rendering della descrizione con supporto markdown */}
+            <Markdown style={markdownStyles}>
+              {trip.description || 'No description available'}
+            </Markdown>
           </View>
         </View>
       </View>
@@ -317,11 +321,6 @@ const styles = StyleSheet.create({
   descContainer: {
     marginTop: 5,
   },
-  description: {
-    fontSize: 15,
-    color: '#222',
-    lineHeight: 22,
-  },
   errorText: {
     color: 'red',
     fontSize: 17,
@@ -329,3 +328,42 @@ const styles = StyleSheet.create({
     marginTop: 50,
   },
 });
+
+//-------------------------------------------------------------------------------------------------------------
+// STILI PER IL MARKDOWN
+const markdownStyles = {
+  // Stile per il testo normale
+  body: {
+    fontSize: 15,
+    color: '#222',
+    lineHeight: 22,
+  },
+  // Stile per il testo in grassetto
+  strong: {
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  // Stile per il testo in corsivo
+  em: {
+    fontStyle: 'italic',
+    color: '#444',
+  },
+  // Stile per le liste bullet
+  bullet_list: {
+    marginVertical: 8,
+  },
+  list_item: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginBottom: 4,
+  },
+  bullet_list_icon: {
+    fontSize: 15,
+    color: '#666',
+    marginRight: 8,
+    marginTop: 2,
+  },
+  bullet_list_content: {
+    flex: 1,
+  },
+};
