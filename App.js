@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { View, ActivityIndicator, Text, StyleSheet } from 'react-native'; // Componenti per la schermata di caricamento
+import { View, ActivityIndicator, Text, StyleSheet } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { Asset } from 'expo-asset'; // <-- AGGIUNTO
 
 import HomeScreen from './screens/homeScreen';
 import TripDetailsScreen from './screens/tripDetailsScreen';
@@ -26,19 +27,46 @@ export default function App() {
   });
 
 //----------------------------------------------------------------------------------------------------------------
-//CARICAMENTO DEI DATI SALVATI CON ASYNC-STORAGE
+//CARICAMENTO DEI DATI SALVATI CON ASYNC-STORAGE E PRELOAD IMMAGINI
 
   // 1. Creiamo uno stato per gestire la visualizzazione del caricamento.
   //    Parte da 'true' perché all'inizio stiamo sempre caricando.
   const [isLoading, setIsLoading] = useState(true);
 
-  // 2. Usiamo useEffect per eseguire il caricamento dei dati salvati con AsyncStorage.
+  // 2. Funzione per precaricare le immagini locali
+  const preloadImages = async () => {
+    try {
+      const imageAssets = [
+        require('./data/defaultImages/Travel_adventure.png'),
+        require('./data/defaultImages/Beautiful_beach.png'),
+        require('./data/defaultImages/Mountain_landscape.png'),
+        require('./data/defaultImages/City_skyline.png'),
+        require('./data/defaultImages/Forest_path.png'),
+        require('./data/defaultImages/Desert_landscape.png'),
+        require('./data/defaultImages/Adventure_hiking.png'),
+        require('./data/defaultImages/Museum.png'),
+      ];
+
+      await Asset.loadAsync(imageAssets);
+      console.log('Immagini precaricate con successo');
+    } catch (error) {
+      console.error('Errore nel precaricamento delle immagini:', error);
+    }
+  };
+
+  // 3. Usiamo useEffect per eseguire il caricamento dei dati salvati con AsyncStorage.
   useEffect(() => {
     // Definiamo una funzione asincrona per poter usare 'await'
     const loadData = async () => {
       try {
+        // Precarica le immagini
+        await preloadImages();
+        
         // Chiamiamo il metodo che carica i viaggi da AsyncStorage
         await tripCollectorA.initializeTripCollector();
+        
+        // Piccolo delay per assicurare che tutto sia caricato
+        await new Promise(resolve => setTimeout(resolve, 200));
       } catch (error) {
         console.error("Errore durante l'inizializzazione dell'app:", error);
       } finally {
@@ -51,8 +79,8 @@ export default function App() {
     loadData(); // Eseguiamo la funzione di caricamento.
   }, []); // L'array vuoto [] assicura che questo codice venga eseguito solo al primo montaggio del componente.
 
-  // 3. Se isLoading è 'true', mostriamo la schermata di caricamento.
-  if (isLoading) {
+  // 4. Se isLoading è 'true', mostriamo la schermata di caricamento.
+  if (isLoading || !fontsLoaded) { // <-- Aggiungi controllo font
     return (
       <SafeAreaProvider>
         <View style={styles.loadingContainer}>

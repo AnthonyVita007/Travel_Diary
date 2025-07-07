@@ -10,19 +10,14 @@ import {
   Alert
 } from 'react-native';
 import tripCollectorA from '../data/tripsDataManagment';
-import InputBox from '../components/inputBox';
 import CategoryBox from '../components/categoryBox';
 import categories from '../models/categories';
 import Button from '../components/button';
 import DatePickerInput from '../components/datePickerInput';
 import LocationInput from '../components/locationInput';
 import DescriptionEditor from '../components/descriptionEditor';
+import ImageSearchPicker from '../components/imageSearchPicker';
 
-// URL dell'immagine di default
-const DEFAULT_IMAGE_URL = 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80';
-
-//---------------------------------------------------------------------------------------------------
-// COMPONENTE PRINCIPALE
 export default function ModifyTripScreen({ route, navigation }) {
 
   //---------------------------------------------------------------------------------------------------
@@ -40,7 +35,7 @@ export default function ModifyTripScreen({ route, navigation }) {
   }
 
   //---------------------------------------------------------------------------------------------------
-  // STATE E FUNZIONI PER LA GESTIONE DEL FORM
+  // STATI E VARIABILI
   
   // --- Stati per gestire i valori dei campi del form ---
   const [title, setTitle] = useState(tripToModify.title);
@@ -54,14 +49,8 @@ export default function ModifyTripScreen({ route, navigation }) {
   // --- Stati per la gestione degli errori ---
   const [errors, setErrors] = useState({});
 
-  // --- Effetto per inizializzare le categorie selezionate ---
-  useEffect(() => {
-    const currentCategoryNames = tripToModify.category.split(', ').filter(name => name);
-    const categoryObjects = currentCategoryNames
-      .map(name => categories[name])
-      .filter(cat => cat);
-    setSelectedCategories(categoryObjects);
-  }, [tripId]);
+  //------------------------------------------------------------------------------------------------------------------------------------
+  //FUNZIONI E CALLBACKS
 
   // --- Funzione per validare tutti i campi ---
   const validateForm = () => {
@@ -72,6 +61,11 @@ export default function ModifyTripScreen({ route, navigation }) {
       newErrors.title = 'Title is required';
     } else if (title.length > 20) {
       newErrors.title = 'Title must be 20 characters or less';
+    }
+
+    // Validazione immagine (obbligatoria) - gestisce sia string che number
+    if (!imageUri) {
+      newErrors.imageUri = 'Please select an image for your trip';
     }
 
     // Validazione location (obbligatoria)
@@ -111,6 +105,39 @@ export default function ModifyTripScreen({ route, navigation }) {
     }
   };
 
+  // --- Funzione per gestire il cambio dell'immagine ---
+  const handleImageChange = (imageValue) => {
+    setImageUri(imageValue);
+    // Rimuovi l'errore dell'immagine se viene selezionata una nuova immagine
+    if (imageValue) {
+      const newErrors = { ...errors };
+      delete newErrors.imageUri;
+      setErrors(newErrors);
+    }
+  };
+
+  // --- Funzione per gestire il cambio della location ---
+  const handleLocationChange = (newLocation) => {
+    setLocation(newLocation);
+    // Rimuovi l'errore della location se viene inserita
+    if (newLocation.trim()) {
+      const newErrors = { ...errors };
+      delete newErrors.location;
+      setErrors(newErrors);
+    }
+  };
+
+  // --- Funzione per gestire il cambio della data di partenza ---
+  const handleDepartureDateChange = (date) => {
+    setDepartureDate(date);
+    // Rimuovi l'errore della data di partenza se viene selezionata
+    if (date) {
+      const newErrors = { ...errors };
+      delete newErrors.departureDate;
+      setErrors(newErrors);
+    }
+  };
+
   // --- Funzione per gestire il cambio della data di ritorno ---
   const handleReturnDateChange = (date) => {
     setReturnDate(date);
@@ -119,6 +146,17 @@ export default function ModifyTripScreen({ route, navigation }) {
     } else {
       const newErrors = { ...errors };
       delete newErrors.returnDate;
+      setErrors(newErrors);
+    }
+  };
+
+  // --- Funzione per gestire il cambio della descrizione ---
+  const handleDescriptionChange = (text) => {
+    setDescription(text);
+    // Rimuovi l'errore della descrizione se rispetta il limite
+    if (text.length <= 3000) {
+      const newErrors = { ...errors };
+      delete newErrors.description;
       setErrors(newErrors);
     }
   };
@@ -141,12 +179,9 @@ export default function ModifyTripScreen({ route, navigation }) {
       return;
     }
 
-    // Usa l'immagine di default se l'URL è vuoto
-    const finalImageUri = imageUri.trim() || DEFAULT_IMAGE_URL;
-
     // Aggiorna le proprietà dell'oggetto 'tripToModify' con i nuovi valori dallo stato.
     tripToModify.title = title.trim();
-    tripToModify.imageUri = finalImageUri;
+    tripToModify.imageUri = imageUri;
     tripToModify.Location = location.trim();
     tripToModify.departureDate = departureDate;
     tripToModify.returnDate = returnDate;
@@ -185,6 +220,18 @@ export default function ModifyTripScreen({ route, navigation }) {
   );
   }
 
+  //------------------------------------------------------------------------------------------------------------------------------------
+  //EFFECTS
+
+  // --- Effetto per inizializzare le categorie selezionate ---
+  useEffect(() => {
+    const currentCategoryNames = tripToModify.category.split(', ').filter(name => name);
+    const categoryObjects = currentCategoryNames
+      .map(name => categories[name])
+      .filter(cat => cat);
+    setSelectedCategories(categoryObjects);
+  }, [tripId]);
+
   //----------------------------------------------------------------------------------------------------
   //RENDER GRAFICO
   return (
@@ -214,20 +261,22 @@ export default function ModifyTripScreen({ route, navigation }) {
               {errors.title && <Text style={styles.errorText}>{errors.title}</Text>}
             </View>
 
-            {/* Input URL Immagine */}
-            <InputBox 
-              label="Image URL (optional)" 
-              value={imageUri} 
-              onChangeText={setImageUri} 
-              placeholder="Enter image URL or leave empty for default" 
-            />
+            {/* Input per la selezione dell'immagine con Pexels e immagini locali */}
+            <View style={styles.inputContainer}>
+              <ImageSearchPicker
+                label="Trip Image *"
+                value={imageUri}
+                onImageChange={handleImageChange}
+              />
+              {errors.imageUri && <Text style={styles.errorText}>{errors.imageUri}</Text>}
+            </View>
 
             {/* Input Location con autocomplete */}
             <View style={styles.inputContainer}>
               <LocationInput
                 label="Location *"
                 value={location}
-                onLocationChange={setLocation}
+                onLocationChange={handleLocationChange}
                 placeholder="Search for a location"
               />
               {errors.location && <Text style={styles.errorText}>{errors.location}</Text>}
@@ -238,7 +287,7 @@ export default function ModifyTripScreen({ route, navigation }) {
               <DatePickerInput
                 label="Departure Date *"
                 value={departureDate}
-                onDateChange={setDepartureDate}
+                onDateChange={handleDepartureDateChange}
                 placeholder="Select departure date"
               />
               {errors.departureDate && <Text style={styles.errorText}>{errors.departureDate}</Text>}
@@ -261,7 +310,7 @@ export default function ModifyTripScreen({ route, navigation }) {
               <DescriptionEditor
                 label="Description"
                 value={description}
-                onChangeText={setDescription}
+                onChangeText={handleDescriptionChange}
                 placeholder="Enter trip description (max 3000 characters)"
                 maxLength={3000}
               />
@@ -339,11 +388,5 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#FF3B30',
     marginTop: 4,
-  },
-  errorText: {
-    color: 'red',
-    fontSize: 17,
-    alignSelf: 'center',
-    marginTop: 50,
   },
 });

@@ -14,20 +14,18 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Trip from '../models/TripClass';
 import tripCollectorA from '../data/tripsDataManagment';
 import NavBar from '../components/navBar';
-import InputBox from '../components/inputBox';
 import CategoryBox from '../components/categoryBox';
 import Button from '../components/button';
 import DatePickerInput from '../components/datePickerInput';
 import LocationInput from '../components/locationInput';
 import DescriptionEditor from '../components/descriptionEditor';
-
-// URL dell'immagine di default
-const DEFAULT_IMAGE_URL = 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80';
+import ImageSearchPicker from '../components/imageSearchPicker';
 
 export default function CreateTripScreen({ navigation }) {
 
   //------------------------------------------------------------------------------------------------------------------------------------
-  //FUNZIONI E CALLBACKS
+  //STATI E VARIABILI
+  
   // --- Stati per gestire i valori dei campi ---
   const [title, setTitle] = useState('');
   const [imageUri, setImageUri] = useState('');
@@ -40,6 +38,9 @@ export default function CreateTripScreen({ navigation }) {
   // --- Stati per la gestione degli errori ---
   const [errors, setErrors] = useState({});
 
+  //------------------------------------------------------------------------------------------------------------------------------------
+  //FUNZIONI E CALLBACKS
+
   // --- Funzione per validare tutti i campi ---
   const validateForm = () => {
     const newErrors = {};
@@ -49,6 +50,11 @@ export default function CreateTripScreen({ navigation }) {
       newErrors.title = 'Title is required';
     } else if (title.length > 20) {
       newErrors.title = 'Title must be 20 characters or less';
+    }
+
+    // Validazione immagine (obbligatoria) - gestisce sia string che number
+    if (!imageUri) {
+      newErrors.imageUri = 'Please select an image for your trip';
     }
 
     // Validazione location (obbligatoria)
@@ -88,6 +94,39 @@ export default function CreateTripScreen({ navigation }) {
     }
   };
 
+  // --- Funzione per gestire il cambio dell'immagine ---
+  const handleImageChange = (imageValue) => {
+    setImageUri(imageValue);
+    // Rimuovi l'errore dell'immagine se viene selezionata una nuova immagine
+    if (imageValue) {
+      const newErrors = { ...errors };
+      delete newErrors.imageUri;
+      setErrors(newErrors);
+    }
+  };
+
+  // --- Funzione per gestire il cambio della location ---
+  const handleLocationChange = (newLocation) => {
+    setLocation(newLocation);
+    // Rimuovi l'errore della location se viene inserita
+    if (newLocation.trim()) {
+      const newErrors = { ...errors };
+      delete newErrors.location;
+      setErrors(newErrors);
+    }
+  };
+
+  // --- Funzione per gestire il cambio della data di partenza ---
+  const handleDepartureDateChange = (date) => {
+    setDepartureDate(date);
+    // Rimuovi l'errore della data di partenza se viene selezionata
+    if (date) {
+      const newErrors = { ...errors };
+      delete newErrors.departureDate;
+      setErrors(newErrors);
+    }
+  };
+
   // --- Funzione per gestire il cambio della data di ritorno ---
   const handleReturnDateChange = (date) => {
     setReturnDate(date);
@@ -96,6 +135,17 @@ export default function CreateTripScreen({ navigation }) {
     } else {
       const newErrors = { ...errors };
       delete newErrors.returnDate;
+      setErrors(newErrors);
+    }
+  };
+
+  // --- Funzione per gestire il cambio della descrizione ---
+  const handleDescriptionChange = (text) => {
+    setDescription(text);
+    // Rimuovi l'errore della descrizione se rispetta il limite
+    if (text.length <= 3000) {
+      const newErrors = { ...errors };
+      delete newErrors.description;
       setErrors(newErrors);
     }
   };
@@ -126,14 +176,11 @@ export default function CreateTripScreen({ navigation }) {
       ? selectedCategories.map(cat => cat.name).join(', ')
       : "none";
     
-    // Usa l'immagine di default se l'URL è vuoto
-    const finalImageUri = imageUri.trim() || DEFAULT_IMAGE_URL;
-    
     //creazione del viaggio da aggiungere
     const tripToAdd = new Trip(
         tripCollectorA.getNextId(),
         title.trim(),           
-        finalImageUri,        
+        imageUri,        
         departureDate,   
         returnDate,
         location.trim(),      
@@ -195,20 +242,22 @@ export default function CreateTripScreen({ navigation }) {
               {errors.title && <Text style={styles.errorText}>{errors.title}</Text>}
             </View>
 
-            {/* Input URL Immagine */}
-            <InputBox 
-              label="Image URL (optional)" 
-              value={imageUri} 
-              onChangeText={setImageUri} 
-              placeholder="Enter image URL or leave empty for default" 
-            />
+            {/* Input per la selezione dell'immagine con Pexels e immagini locali */}
+            <View style={styles.inputContainer}>
+              <ImageSearchPicker
+                label="Trip Image *"
+                value={imageUri}
+                onImageChange={handleImageChange}
+              />
+              {errors.imageUri && <Text style={styles.errorText}>{errors.imageUri}</Text>}
+            </View>
 
             {/* Input Location con autocomplete */}
             <View style={styles.inputContainer}>
               <LocationInput
                 label="Location *"
                 value={location}
-                onLocationChange={setLocation}
+                onLocationChange={handleLocationChange}
                 placeholder="Search for a location"
               />
               {errors.location && <Text style={styles.errorText}>{errors.location}</Text>}
@@ -219,7 +268,7 @@ export default function CreateTripScreen({ navigation }) {
               <DatePickerInput
                 label="Departure Date *"
                 value={departureDate}
-                onDateChange={setDepartureDate}
+                onDateChange={handleDepartureDateChange}
                 placeholder="Select departure date"
                 minimumDate={new Date()}
               />
@@ -243,7 +292,7 @@ export default function CreateTripScreen({ navigation }) {
               <DescriptionEditor
                 label="Description"
                 value={description}
-                onChangeText={setDescription}
+                onChangeText={handleDescriptionChange}
                 placeholder="Enter trip description (max 3000 characters)"
                 maxLength={3000}
               />
