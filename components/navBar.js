@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
   },
   icon: {
     fontSize: 30,
-    color: '#333',
+    color: '#005bea',
   },
 });
 

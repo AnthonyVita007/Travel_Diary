@@ -4,6 +4,7 @@ import TripCard from '../components/tripCard';
 import SearchBar from '../components/searchBar';
 import tripCollectorA from '../data/tripsDataManagment'; // importa il tripCollector con i viaggi mock
 import NavBar from '../components/navBar';
+import CustomHeader from '../components/customHeader';
 
 export default function HomeScreen({ navigation }) { // <--- aggiungi navigation qui
   //FUNZIONI E CALLBACKS
@@ -29,14 +30,6 @@ export default function HomeScreen({ navigation }) { // <--- aggiungi navigation
   }, [search]);
 
    //CALLBACKS
-  // Callback per il pulsante di ricerca
-  const handleSearch = () => {
-    if (filteredTrips.length === 0) {
-      Alert.alert('Nessun risultato', `Nessun viaggio trovato con "${search}"`);
-    } else {
-      Alert.alert('Ricerca avviata', `Testo: ${search}`);
-    }
-  };
 
   // Callback per il pulsante dei filtri
   const handleFilter = () => {
@@ -50,13 +43,16 @@ export default function HomeScreen({ navigation }) { // <--- aggiungi navigation
 
   //--------------------------------------------------------------------------------------------------------------------------
   return (
-    <SafeAreaView style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'center', backgroundColor: '#eee' }}>
+    <SafeAreaView style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'center', backgroundColor: '#ebf7fa' }}>
+
+      {/* Header personalizzato */}
+      <CustomHeader />
+
       {/* --- SearchBar nella parte alta --- */}
       <View style={{ width: '95%', marginTop: 24 }}>
         <SearchBar
           value={search}
           onChangeText={setSearch}
-          onSearchPress={handleSearch}
           onFilterPress={handleFilter}
         />
       </View>

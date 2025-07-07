@@ -94,9 +94,7 @@ export default class TripCollector {
 //------------------------------------------------------------------------------------------------------
 //METODI CHE NON COMPRENDONO ASYNC-STORAGE
   
-  /**
-   * Restituisce un ID unico e incrementa il contatore per il prossimo.
-   */
+  //Restituisce un ID unico e incrementa il contatore per il prossimo.
   getNextId() {
     return this.nextId++;
   }

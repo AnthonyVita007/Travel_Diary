@@ -9,7 +9,6 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 const SearchBar = ({
   value,
   onChangeText,
-  onSearchPress,
   onFilterPress,
   placeholder = 'Cerca viaggi...',
   style,
@@ -30,7 +29,7 @@ const SearchBar = ({
       />
 
       {/* --- Icona ricerca (lente d'ingrandimento), premibile --- */}
-      <Pressable onPress={onSearchPress} style={styles.iconButton}>
+      <Pressable style={styles.iconButton}>
         <Icon name="magnify" size={28} color="#333" />
       </Pressable>
 

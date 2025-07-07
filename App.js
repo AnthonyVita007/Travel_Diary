@@ -9,17 +9,29 @@ import TripDetailsScreen from './screens/tripDetailsScreen';
 import CreateTripScreen from './screens/createTripScreen';
 import ModifyTripScreen from './screens/modifyTripScreen';
 
+// Importiamo il font dell'header
+import { useFonts, FontdinerSwanky_400Regular } from '@expo-google-fonts/fontdiner-swanky';
+
 // Importiamo la nostra istanza unica di tripCollectorA
 import tripCollectorA from './data/tripsDataManagment';
 
 const Stack = createStackNavigator();
 
 export default function App() {
+
+  //caricamento del font personalizzato dell'header della home screen
+  const [fontsLoaded] = useFonts({
+    FontdinerSwanky_400Regular,
+  });
+
+//----------------------------------------------------------------------------------------------------------------
+//CARICAMENTO DEI DATI SALVATI CON ASYNC-STORAGE
+
   // 1. Creiamo uno stato per gestire la visualizzazione del caricamento.
   //    Parte da 'true' perché all'inizio stiamo sempre caricando.
   const [isLoading, setIsLoading] = useState(true);
 
-  // 2. Usiamo useEffect per eseguire il caricamento dei dati UNA SOLA VOLTA.
+  // 2. Usiamo useEffect per eseguire il caricamento dei dati salvati con AsyncStorage.
   useEffect(() => {
     // Definiamo una funzione asincrona per poter usare 'await'
     const loadData = async () => {
@@ -50,22 +62,25 @@ export default function App() {
     );
   }
 
-  // 4. Se isLoading è 'false', mostriamo la normale navigazione dell'app.
+//----------------------------------------------------------------------------------------------------------------
+//NAVIGAZIONE DELL'APP
   return (
     <SafeAreaProvider>
       <NavigationContainer>
         <Stack.Navigator 
           initialRouteName="HomeScreen"
           screenOptions={{
-            headerStyle: { backgroundColor: '#fff' },
-            headerTitleStyle: { fontSize: 24, fontWeight: 'bold' },
+            headerStyle: { backgroundColor: '#005bea' },
+            headerTitleStyle: { fontSize: 24, fontWeight: 'bold', color: '#fff' },
             headerTitleAlign: 'center',
           }}
         >
           <Stack.Screen 
             name="HomeScreen" 
             component={HomeScreen} 
-            options={{ title: 'My Trips', headerLeft: null }} 
+            options={{ 
+              headerShown: false // Nascondiamo l'header di default per usare il nostro
+            }} 
           />
           <Stack.Screen 
             name="TripDetailsScreen" 
@@ -88,6 +103,8 @@ export default function App() {
   );
 }
 
+//--------------------------------------------------------------------------------------------------------
+//STILI
 // Stili per la schermata di caricamento
 const styles = StyleSheet.create({
   loadingContainer: {

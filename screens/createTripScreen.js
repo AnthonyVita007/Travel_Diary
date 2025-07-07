@@ -93,7 +93,7 @@ export default function CreateTripScreen({ navigation }) {
   //-------------------------------------------------------------------------------------------------------
   //RENDERING DELLA PAGINA
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, {backgroundColor: '#ebf7fa'}]}>
       <ScrollView style={styles.scrollView}>
 
          {/* Container principale */}

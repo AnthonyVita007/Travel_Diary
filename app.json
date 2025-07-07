@@ -32,7 +32,8 @@
     },
     "owner": "andy_vita_1234",
     "plugins": [
-      "expo-sqlite"
+      "expo-sqlite",
+      "expo-font"
     ]
   }
 }
