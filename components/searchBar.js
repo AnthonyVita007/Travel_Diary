@@ -10,14 +10,18 @@ const SearchBar = ({
   value,
   onChangeText,
   onFilterPress,
-  placeholder = 'Cerca viaggi...',
+  placeholder = 'Search trips...',
   style,
+  activeFiltersCount = 0,
 }) => {
+
+  //-------------------------------------------------------------------------------------------------------
+  //RENDERING DEL COMPONENTE
   return (
-    // --- Container principale ---
+    // Container principale
     <View style={[styles.container, style]}>
       
-      {/* --- Barra di ricerca (input testo) --- */}
+      {/* Barra di ricerca (input testo) */}
       <TextInput
         style={styles.input}
         value={value}
@@ -28,20 +32,33 @@ const SearchBar = ({
         returnKeyType="search"
       />
 
-      {/* --- Icona ricerca (lente d'ingrandimento), premibile --- */}
+      {/* Icona ricerca (lente d'ingrandimento), premibile */}
       <Pressable style={styles.iconButton}>
         <Icon name="magnify" size={28} color="#333" />
       </Pressable>
 
-      {/* --- Icona filtri (tipica dei filtri), premibile --- */}
+      {/* Icona filtri (tipica dei filtri), premibile */}
       <Pressable onPress={onFilterPress} style={styles.iconButton}>
-        <Icon name="filter-variant" size={28} color="#333" />
+        <View style={styles.filterIconContainer}>
+          <Icon 
+            name="filter-variant" 
+            size={28} 
+            color={activeFiltersCount > 0 ? "#007AFF" : "#333"} 
+          />
+          {/* Badge per mostrare il numero di filtri attivi */}
+          {activeFiltersCount > 0 && (
+            <View style={styles.filterBadge}>
+              <Icon name="circle" size={8} color="#FF3B30" />
+            </View>
+          )}
+        </View>
       </Pressable>
     </View>
   );
 };
 
-// --- Stili del componente ---
+//----------------------------------------------------------------------------------------------------------------------------------------
+// STILI
 const styles = StyleSheet.create({
   // Stile container principale della searchbar
   container: {
@@ -70,6 +87,16 @@ const styles = StyleSheet.create({
   iconButton: {
     padding: 6,
     marginLeft: 4,
+  },
+  // Stile per il container dell'icona filtri
+  filterIconContainer: {
+    position: 'relative',
+  },
+  // Stile per il badge dei filtri attivi
+  filterBadge: {
+    position: 'absolute',
+    top: -2,
+    right: -2,
   },
 });
 
