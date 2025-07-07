@@ -61,13 +61,13 @@ export default function TripDetailsScreen({ route, navigation }) {
       headerRight: () => (
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Pressable onPress={handleEditPress} style={{ marginRight: 15 }}>
-            <Icon name="square-edit-outline" size={28} color="#333" />
+            <Icon name="square-edit-outline" size={28} color="#fff" />
           </Pressable>
           <Pressable onPress={handleToggleFavorite} style={{ marginRight: 15 }}>
             <Icon 
               name={isFavorite ? 'star' : 'star-outline'} 
               size={28} 
-              color={isFavorite ? '#FFD700' : '#888'} 
+              color={isFavorite ? '#FFD700' : '#fff'} 
             />
           </Pressable>
         </View>
