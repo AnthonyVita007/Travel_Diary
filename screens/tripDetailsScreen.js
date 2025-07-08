@@ -1,7 +1,7 @@
 import React, { useState, useLayoutEffect } from 'react';
-import { View, Text, Image, StyleSheet, Dimensions, SafeAreaView, ScrollView, Pressable } from 'react-native';
+import { View, Text, Image, StyleSheet, Dimensions, SafeAreaView, ScrollView, Pressable, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import Markdown from 'react-native-markdown-display'; // <-- NUOVO IMPORT
+import Markdown from 'react-native-markdown-display'; 
 import tripCollectorA from '../data/tripsDataManagment';
 import categories from '../models/categories';
 
@@ -51,6 +51,11 @@ export default function TripDetailsScreen({ route, navigation }) {
   // Funzione per la gestione del press sull'icona edit di un viaggio
   const handleEditPress = () => {
     navigation.navigate('ModifyTripScreen', { tripId: trip.id });
+  };
+  
+  // Funzione per aprire il diario di viaggio
+  const handleOpenDiary = () => {
+    navigation.navigate('TripDiaryScreen', { tripId: trip.id });
   };
   
   //---------------------------------------------------------------------------------------------------
@@ -111,7 +116,7 @@ return (
         {/* --- Sezione Header: contiene l'immagine principale del viaggio --- */}
         <View style={styles.headerContainer}>
           <Image
-            source={typeof trip.imageUri === 'number' ? trip.imageUri : { uri: trip.imageUri }} // <-- CORREZIONE PRINCIPALE
+            source={typeof trip.imageUri === 'number' ? trip.imageUri : { uri: trip.imageUri }}
             style={styles.headerImage}
             resizeMode="cover"
           />
@@ -121,6 +126,15 @@ return (
             <Text style={styles.locationText}>{trip.Location}</Text>
           </View>
         </View>
+        
+        {/* --- Pulsante per aprire il diario di viaggio --- */}
+        <TouchableOpacity 
+          style={styles.diaryButton}
+          onPress={handleOpenDiary}
+        >
+          <Icon name="book-open-variant" size={24} color="#fff" />
+          <Text style={styles.diaryButtonText}>Open Trip Diary</Text>
+        </TouchableOpacity>
 
         {/* --- Card informativa: raggruppa tutti i dettagli testuali del viaggio --- */}
         <View style={styles.infoCard}>
@@ -230,6 +244,22 @@ const styles = StyleSheet.create({
   locationText: {
     fontSize: 16,
     color: '#eee',
+  },
+  diaryButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#007AFF',
+    marginHorizontal: 15,
+    marginTop: 15,
+    paddingVertical: 12,
+    borderRadius: 8,
+  },
+  diaryButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginLeft: 8,
   },
   infoCard: {
     backgroundColor: '#fff',

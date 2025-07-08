@@ -3,13 +3,16 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { View, ActivityIndicator, Text, StyleSheet } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { Asset } from 'expo-asset'; // <-- AGGIUNTO
+import { Asset } from 'expo-asset';
 
 import HomeScreen from './screens/homeScreen';
 import TripDetailsScreen from './screens/tripDetailsScreen';
 import CreateTripScreen from './screens/createTripScreen';
 import ModifyTripScreen from './screens/modifyTripScreen';
 import StatsScreen from './screens/statsScreen';
+import TripDiaryScreen from './screens/TripDiaryScreen';
+import DiaryNoteDetailsScreen from './screens/DiaryNoteDetailsScreen';
+import DiaryNoteEditScreen from './screens/DiaryNoteEditScreen';
 
 // Importiamo il font dell'header
 import { useFonts, FontdinerSwanky_400Regular } from '@expo-google-fonts/fontdiner-swanky';
@@ -130,6 +133,24 @@ export default function App() {
             name="StatsScreen" 
             component={StatsScreen} 
             options={{ title: 'My World Map' }} 
+          />
+          {/* Nuove schermate per il diario di viaggio */}
+          <Stack.Screen 
+            name="TripDiaryScreen" 
+            component={TripDiaryScreen} 
+            options={{ title: 'Trip Diary' }} 
+          />
+          <Stack.Screen 
+            name="DiaryNoteDetailsScreen" 
+            component={DiaryNoteDetailsScreen} 
+            options={{ title: 'Diary Note' }} 
+          />
+          <Stack.Screen 
+            name="DiaryNoteEditScreen" 
+            component={DiaryNoteEditScreen} 
+            options={({ route }) => ({ 
+              title: route.params?.isNewNote ? 'New Note' : 'Edit Note' 
+            })} 
           />
         </Stack.Navigator>
       </NavigationContainer>
