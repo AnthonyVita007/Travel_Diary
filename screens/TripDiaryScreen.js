@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { 
   View, 
   Text, 
@@ -13,7 +13,7 @@ import NoteCard from '../components/noteCard';
 
 export default function TripDiaryScreen({ route, navigation }) {
   // Ottiene il tripId dai parametri di navigazione
-  const { tripId } = route.params;
+  const { tripId, refresh } = route.params || {};
   const trip = tripCollectorA.getTrip(tripId);
   
   //------------------------------------------------------------------------------------------------------------------------------------
@@ -26,10 +26,42 @@ export default function TripDiaryScreen({ route, navigation }) {
   //------------------------------------------------------------------------------------------------------------------------------------
   //EFFECTS
   
-  // Carica le note all'apertura della schermata
+  // Carica le note all'apertura della schermata o quando cambia refresh
   useEffect(() => {
     loadNotes();
-  }, [refreshKey]);
+  }, [refreshKey, refresh]);
+  
+  // Personalizza il pulsante indietro nella navigation bar
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerLeft: () => (
+        <TouchableOpacity 
+          style={{ marginLeft: 15 }}
+          onPress={() => navigation.navigate('TripDetailsScreen', { tripId })}
+        >
+          <Icon name="arrow-left" size={24} color="#fff" />
+        </TouchableOpacity>
+      ),
+      // Disabilita il gesto di swipe indietro (solo per iOS)
+      gestureEnabled: false
+    });
+  }, [navigation, tripId]);
+
+  // Gestione hardware back button (Android)
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+      // Se è un'azione di tipo GO_BACK (pulsante hardware)
+      if (e.data.action.type === 'GO_BACK') {
+        // Preveniamo l'azione di default
+        e.preventDefault();
+        
+        // Navighiamo direttamente alla schermata dei dettagli del viaggio
+        navigation.navigate('TripDetailsScreen', { tripId });
+      }
+    });
+
+    return unsubscribe;
+  }, [navigation, tripId]);
 
   //------------------------------------------------------------------------------------------------------------------------------------
   //FUNZIONI E CALLBACKS
@@ -73,6 +105,7 @@ export default function TripDiaryScreen({ route, navigation }) {
       {/* Header con titolo del diario */}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>{trip.title}'s Diary</Text>
+        <Icon name="book" size={24} color="#fff"/>
       </View>
 
       {/* Lista delle note */}
@@ -112,6 +145,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#f7f7f7',
   },
   header: {
+    flexDirection: 'row',
+    justifyContent: 'center',
     backgroundColor: '#005bea',
     padding: 16,
     paddingTop: 20,

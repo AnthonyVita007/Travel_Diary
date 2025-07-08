@@ -14,8 +14,12 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import tripCollectorA from '../data/tripsDataManagment';
 
 const { width } = Dimensions.get('window');
+const IMAGE_WIDTH = width * 0.9; // 90% della larghezza dello schermo
+const IMAGE_HEIGHT = IMAGE_WIDTH * 0.6; // Rapporto d'aspetto 16:10 (rettangolare)
 
 export default function DiaryNoteDetailsScreen({ route, navigation }) {
+//----------------------------------------------------------------------------------------------------
+//FUNZIONI E CALLBACKS
   // Ottiene i parametri dalla navigazione
   const { tripId, noteId } = route.params;
   
@@ -79,6 +83,9 @@ export default function DiaryNoteDetailsScreen({ route, navigation }) {
     month: 'long',
     day: 'numeric'
   });
+
+//----------------------------------------------------------------------------------------------------
+//RENDER DELLA PAGINA
   
   return (
     <SafeAreaView style={styles.container}>
@@ -98,16 +105,17 @@ export default function DiaryNoteDetailsScreen({ route, navigation }) {
             </Markdown>
           </View>
           
-          {/* Galleria delle immagini */}
+          {/* Galleria delle immagini - MODIFICATA */}
           {note.images && note.images.length > 0 && (
             <View style={styles.imagesContainer}>
               {note.images.map((image, index) => (
-                <Image
-                  key={index}
-                  source={{ uri: image }}
-                  style={styles.image}
-                  resizeMode="cover"
-                />
+                <View key={index} style={styles.imageWrapper}>
+                  <Image
+                    source={{ uri: image }}
+                    style={styles.image}
+                    resizeMode="cover"
+                  />
+                </View>
               ))}
             </View>
           )}
@@ -116,6 +124,9 @@ export default function DiaryNoteDetailsScreen({ route, navigation }) {
     </SafeAreaView>
   );
 }
+
+//----------------------------------------------------------------------------------------------------
+//STILI
 
 const styles = StyleSheet.create({
   container: {
@@ -148,16 +159,24 @@ const styles = StyleSheet.create({
   contentContainer: {
     marginBottom: 20,
   },
+  // Contenitore per le immagini - MODIFICATO
   imagesContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'flex-start',
+    alignItems: 'center',
     marginTop: 10,
   },
+  // Wrapper per ogni immagine - NUOVO
+  imageWrapper: {
+    marginBottom: 15,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  // Stile per ogni immagine - MODIFICATO
   image: {
-    width: (width - 50) / 2,
-    height: (width - 50) / 2,
-    margin: 5,
+    width: IMAGE_WIDTH,
+    height: IMAGE_HEIGHT,
     borderRadius: 8,
     borderWidth: 1,
     borderColor: '#e0d9c5',
@@ -173,7 +192,7 @@ const styles = StyleSheet.create({
   },
 });
 
-// Stili per il markdown
+// Stili per il markdown rimangono invariati
 const markdownStyles = {
   body: {
     fontSize: 16,

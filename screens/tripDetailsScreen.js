@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect } from 'react';
+import React, { useState, useLayoutEffect, useEffect } from 'react';
 import { View, Text, Image, StyleSheet, Dimensions, SafeAreaView, ScrollView, Pressable, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Markdown from 'react-native-markdown-display'; 
@@ -59,11 +59,19 @@ export default function TripDetailsScreen({ route, navigation }) {
   };
   
   //---------------------------------------------------------------------------------------------------
-  // PERSONALIZZAZIONE DELL'HEADER DELLA PAGINA
+  // PERSONALIZZAZIONE DELL'HEADER DELLA PAGINA E GESTIONE NAVIGAZIONE
 
-  //gestione icona favorites e icona editTrip
+  // Personalizza il pulsante indietro nella navigation bar
   useLayoutEffect(() => {
     navigation.setOptions({
+      headerLeft: () => (
+        <TouchableOpacity 
+          style={{ marginLeft: 15 }}
+          onPress={() => navigation.navigate('HomeScreen', { refresh: Date.now() })}
+        >
+          <Icon name="arrow-left" size={24} color="#fff" />
+        </TouchableOpacity>
+      ),
       headerRight: () => (
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Pressable onPress={handleEditPress} style={{ marginRight: 15 }}>
@@ -78,8 +86,26 @@ export default function TripDetailsScreen({ route, navigation }) {
           </Pressable>
         </View>
       ),
+      // Disabilita il gesto di swipe indietro (solo per iOS)
+      gestureEnabled: false
     });
   }, [navigation, isFavorite]);
+
+  // Gestione hardware back button (Android)
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+      // Se è un'azione di tipo GO_BACK (pulsante hardware)
+      if (e.data.action.type === 'GO_BACK') {
+        // Preveniamo l'azione di default
+        e.preventDefault();
+        
+        // Navighiamo direttamente alla schermata home
+        navigation.navigate('HomeScreen', { refresh: Date.now() });
+      }
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   //---------------------------------------------------------------------------------------------------
   //FUNZIONI DI SUPPORTO
@@ -132,7 +158,7 @@ return (
           style={styles.diaryButton}
           onPress={handleOpenDiary}
         >
-          <Icon name="book-open-variant" size={24} color="#fff" />
+          <Icon name="book" size={24} color="#fff" />
           <Text style={styles.diaryButtonText}>Open Trip Diary</Text>
         </TouchableOpacity>
 

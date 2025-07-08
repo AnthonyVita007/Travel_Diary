@@ -105,6 +105,7 @@ export default function App() {
             headerStyle: { backgroundColor: '#005bea' },
             headerTitleStyle: { fontSize: 24, fontWeight: 'bold', color: '#fff' },
             headerTitleAlign: 'center',
+            headerTintColor: '#fff'
           }}
         >
           <Stack.Screen 
@@ -143,7 +144,7 @@ export default function App() {
           <Stack.Screen 
             name="DiaryNoteDetailsScreen" 
             component={DiaryNoteDetailsScreen} 
-            options={{ title: 'Diary Note' }} 
+            options={{ title: 'Note' }} 
           />
           <Stack.Screen 
             name="DiaryNoteEditScreen" 
