@@ -16,8 +16,10 @@ const DatePickerInput = ({ label, value, onDateChange, minimumDate, placeholder 
   const handleDateChange = (event, selectedDate) => {
     setShowPicker(Platform.OS === 'ios'); // Su iOS il picker rimane aperto
     if (selectedDate) {
-      // Formatta la data nel formato YYYY-MM-DD
-      const formattedDate = selectedDate.toISOString().split('T')[0];
+      const year = selectedDate.getFullYear();
+      const month = String(selectedDate.getMonth() + 1).padStart(2, '0');
+      const day = String(selectedDate.getDate()).padStart(2, '0');
+      const formattedDate = `${year}-${month}-${day}`;
       onDateChange(formattedDate);
     }
   };
@@ -25,7 +27,8 @@ const DatePickerInput = ({ label, value, onDateChange, minimumDate, placeholder 
   // --- Converte la stringa della data in oggetto Date per il picker ---
   const getDateFromString = (dateString) => {
     if (!dateString) return new Date();
-    return new Date(dateString + 'T00:00:00');
+    const [year, month, day] = dateString.split('-');
+    return new Date(year, month - 1, day);
   };
 
   //-------------------------------------------------------------------------------------------------------

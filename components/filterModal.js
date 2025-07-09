@@ -34,11 +34,37 @@ const FilterModal = ({
     endDate: ''
   });
 
+  // Stato per gestire gli errori di validazione delle date
+  const [dateErrors, setDateErrors] = useState({});
+
   // Ottieni tutte le categorie disponibili escludendo "None"
   const allCategories = getCategoriesArray().filter(category => category.name !== 'None');
 
   //------------------------------------------------------------------------------------------------------------------------------------
   //FUNZIONI E CALLBACKS
+
+  // Funzione per validare le date
+  const validateDates = (startDate, endDate, filterType) => {
+    const errors = {};
+    
+    if (filterType === 'range') {
+      if (!startDate) {
+        errors.startDate = 'Start date is required';
+      }
+      if (!endDate) {
+        errors.endDate = 'End date is required';
+      } else if (startDate && endDate && new Date(endDate) < new Date(startDate)) {
+        errors.endDate = 'End date cannot be before start date';
+      }
+    } else if (filterType === 'departure' || filterType === 'return') {
+      if (!startDate) {
+        errors.startDate = 'Date is required';
+      }
+    }
+    
+    setDateErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
 
   // Funzione per gestire il toggle del filtro favorites
   const handleFavoriteToggle = () => {
@@ -77,22 +103,32 @@ const FilterModal = ({
       startDate: '',
       endDate: ''
     });
+    // Pulisci anche gli errori
+    setDateErrors({});
   };
 
   // Funzione per gestire il cambio della data di inizio
   const handleStartDateChange = (date) => {
-    setTempFilters({
+    const newTempFilters = {
       ...tempFilters,
       startDate: date
-    });
+    };
+    setTempFilters(newTempFilters);
+    
+    // Valida le date dopo il cambio
+    validateDates(date, newTempFilters.endDate, newTempFilters.dateFilterType);
   };
 
   // Funzione per gestire il cambio della data di fine
   const handleEndDateChange = (date) => {
-    setTempFilters({
+    const newTempFilters = {
       ...tempFilters,
       endDate: date
-    });
+    };
+    setTempFilters(newTempFilters);
+    
+    // Valida le date dopo il cambio
+    validateDates(newTempFilters.startDate, date, newTempFilters.dateFilterType);
   };
 
   // Funzione per azzerare tutti i filtri temporanei
@@ -104,10 +140,22 @@ const FilterModal = ({
       startDate: '',
       endDate: ''
     });
+    setDateErrors({});
   };
 
   // Funzione per applicare i filtri (chiamata quando si preme Apply)
   const handleApplyFilters = () => {
+    // Valida le date prima di applicare i filtri
+    const isValid = validateDates(
+      tempFilters.startDate, 
+      tempFilters.endDate, 
+      tempFilters.dateFilterType
+    );
+    
+    if (!isValid) {
+      return; // Non applicare i filtri se la validazione fallisce
+    }
+    
     onFiltersChange(tempFilters);
     onClose();
   };
@@ -116,6 +164,7 @@ const FilterModal = ({
   const handleCancel = () => {
     // Ripristina i filtri temporanei a quelli attualmente attivi
     setTempFilters(selectedFilters);
+    setDateErrors({});
     onClose();
   };
 
@@ -143,6 +192,7 @@ const FilterModal = ({
         startDate: selectedFilters.startDate || '',
         endDate: selectedFilters.endDate || ''
       });
+      setDateErrors({});
     }
   }, [visible, selectedFilters]);
 
@@ -256,6 +306,9 @@ const FilterModal = ({
                     onDateChange={handleStartDateChange}
                     placeholder="Select departure date"
                   />
+                  {dateErrors.startDate && (
+                    <Text style={styles.errorText}>{dateErrors.startDate}</Text>
+                  )}
                 </View>
               )}
 
@@ -267,6 +320,9 @@ const FilterModal = ({
                     onDateChange={handleStartDateChange}
                     placeholder="Select return date"
                   />
+                  {dateErrors.startDate && (
+                    <Text style={styles.errorText}>{dateErrors.startDate}</Text>
+                  )}
                 </View>
               )}
 
@@ -278,13 +334,20 @@ const FilterModal = ({
                     onDateChange={handleStartDateChange}
                     placeholder="Select start date"
                   />
+                  {dateErrors.startDate && (
+                    <Text style={styles.errorText}>{dateErrors.startDate}</Text>
+                  )}
+                  
                   <DatePickerInput
                     label="To Date"
                     value={tempFilters.endDate}
                     onDateChange={handleEndDateChange}
                     placeholder="Select end date"
-                    minimumDate={tempFilters.startDate ? new Date(tempFilters.startDate) : new Date()}
+                    minimumDate={tempFilters.startDate ? new Date(tempFilters.startDate + 'T00:00:00') : undefined}
                   />
+                  {dateErrors.endDate && (
+                    <Text style={styles.errorText}>{dateErrors.endDate}</Text>
+                  )}
                 </View>
               )}
             </View>
@@ -476,6 +539,11 @@ const styles = StyleSheet.create({
   selectedOptionText: {
     color: '#007AFF',
     fontWeight: '600',
+  },
+  errorText: {
+    fontSize: 12,
+    color: '#FF3B30',
+    marginTop: 4,
   },
   modalFooter: {
     flexDirection: 'row',
