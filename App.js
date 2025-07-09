@@ -135,7 +135,6 @@ export default function App() {
             component={StatsScreen} 
             options={{ title: 'My World Map' }} 
           />
-          {/* Nuove schermate per il diario di viaggio */}
           <Stack.Screen 
             name="TripDiaryScreen" 
             component={TripDiaryScreen} 

@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { getCategoriesArray } from '../models/categories';
+import DatePickerInput from './datePickerInput';
 
 const { width, height } = Dimensions.get('window');
 
@@ -26,7 +27,11 @@ const FilterModal = ({
   // Stati locali per gestire i filtri temporanei (prima di applicarli)
   const [tempFilters, setTempFilters] = useState({
     showFavoritesOnly: false,
-    categories: []
+    categories: [],
+    // Nuovi filtri per data
+    dateFilterType: 'all', // 'all', 'departure', 'return', 'range'
+    startDate: '',
+    endDate: ''
   });
 
   // Ottieni tutte le categorie disponibili escludendo "None"
@@ -63,11 +68,41 @@ const FilterModal = ({
     });
   };
 
+  // Funzione per gestire il cambio del tipo di filtro data
+  const handleDateFilterTypeChange = (type) => {
+    setTempFilters({
+      ...tempFilters,
+      dateFilterType: type,
+      // Reset delle date quando cambia il tipo
+      startDate: '',
+      endDate: ''
+    });
+  };
+
+  // Funzione per gestire il cambio della data di inizio
+  const handleStartDateChange = (date) => {
+    setTempFilters({
+      ...tempFilters,
+      startDate: date
+    });
+  };
+
+  // Funzione per gestire il cambio della data di fine
+  const handleEndDateChange = (date) => {
+    setTempFilters({
+      ...tempFilters,
+      endDate: date
+    });
+  };
+
   // Funzione per azzerare tutti i filtri temporanei
   const handleClearAllFilters = () => {
     setTempFilters({
       showFavoritesOnly: false,
-      categories: []
+      categories: [],
+      dateFilterType: 'all',
+      startDate: '',
+      endDate: ''
     });
   };
 
@@ -91,6 +126,7 @@ const FilterModal = ({
     if (tempFilters.categories && tempFilters.categories.length > 0) {
       count += tempFilters.categories.length;
     }
+    if (tempFilters.dateFilterType !== 'all') count++;
     return count;
   };
 
@@ -100,7 +136,13 @@ const FilterModal = ({
   // Effect per inizializzare i filtri temporanei quando si apre il modale
   useEffect(() => {
     if (visible) {
-      setTempFilters(selectedFilters);
+      setTempFilters({
+        showFavoritesOnly: selectedFilters.showFavoritesOnly || false,
+        categories: selectedFilters.categories || [],
+        dateFilterType: selectedFilters.dateFilterType || 'all',
+        startDate: selectedFilters.startDate || '',
+        endDate: selectedFilters.endDate || ''
+      });
     }
   }, [visible, selectedFilters]);
 
@@ -125,6 +167,127 @@ const FilterModal = ({
           </View>
 
           <ScrollView style={styles.modalContent} showsVerticalScrollIndicator={false}>
+            
+            {/* Sezione Date Filter */}
+            <View style={styles.filterSection}>
+              <Text style={styles.sectionTitle}>Date Filter</Text>
+              
+              {/* Opzioni per il tipo di filtro data */}
+              <View style={styles.dateFilterOptions}>
+                <Pressable 
+                  style={[
+                    styles.dateFilterOption,
+                    tempFilters.dateFilterType === 'all' && styles.selectedOption
+                  ]}
+                  onPress={() => handleDateFilterTypeChange('all')}
+                >
+                  <Text style={[
+                    styles.optionText,
+                    tempFilters.dateFilterType === 'all' && styles.selectedOptionText
+                  ]}>
+                    All trips
+                  </Text>
+                  {tempFilters.dateFilterType === 'all' && (
+                    <Icon name="check" size={20} color="#007AFF" />
+                  )}
+                </Pressable>
+
+                <Pressable 
+                  style={[
+                    styles.dateFilterOption,
+                    tempFilters.dateFilterType === 'departure' && styles.selectedOption
+                  ]}
+                  onPress={() => handleDateFilterTypeChange('departure')}
+                >
+                  <Text style={[
+                    styles.optionText,
+                    tempFilters.dateFilterType === 'departure' && styles.selectedOptionText
+                  ]}>
+                    Filter by departure date
+                  </Text>
+                  {tempFilters.dateFilterType === 'departure' && (
+                    <Icon name="check" size={20} color="#007AFF" />
+                  )}
+                </Pressable>
+
+                <Pressable 
+                  style={[
+                    styles.dateFilterOption,
+                    tempFilters.dateFilterType === 'return' && styles.selectedOption
+                  ]}
+                  onPress={() => handleDateFilterTypeChange('return')}
+                >
+                  <Text style={[
+                    styles.optionText,
+                    tempFilters.dateFilterType === 'return' && styles.selectedOptionText
+                  ]}>
+                    Filter by return date
+                  </Text>
+                  {tempFilters.dateFilterType === 'return' && (
+                    <Icon name="check" size={20} color="#007AFF" />
+                  )}
+                </Pressable>
+
+                <Pressable 
+                  style={[
+                    styles.dateFilterOption,
+                    tempFilters.dateFilterType === 'range' && styles.selectedOption
+                  ]}
+                  onPress={() => handleDateFilterTypeChange('range')}
+                >
+                  <Text style={[
+                    styles.optionText,
+                    tempFilters.dateFilterType === 'range' && styles.selectedOptionText
+                  ]}>
+                    Filter by date range
+                  </Text>
+                  {tempFilters.dateFilterType === 'range' && (
+                    <Icon name="check" size={20} color="#007AFF" />
+                  )}
+                </Pressable>
+              </View>
+
+              {/* Campi data basati sul tipo selezionato */}
+              {tempFilters.dateFilterType === 'departure' && (
+                <View style={styles.dateInputContainer}>
+                  <DatePickerInput
+                    label="Departure Date"
+                    value={tempFilters.startDate}
+                    onDateChange={handleStartDateChange}
+                    placeholder="Select departure date"
+                  />
+                </View>
+              )}
+
+              {tempFilters.dateFilterType === 'return' && (
+                <View style={styles.dateInputContainer}>
+                  <DatePickerInput
+                    label="Return Date"
+                    value={tempFilters.startDate}
+                    onDateChange={handleStartDateChange}
+                    placeholder="Select return date"
+                  />
+                </View>
+              )}
+
+              {tempFilters.dateFilterType === 'range' && (
+                <View style={styles.dateInputContainer}>
+                  <DatePickerInput
+                    label="From Date"
+                    value={tempFilters.startDate}
+                    onDateChange={handleStartDateChange}
+                    placeholder="Select start date"
+                  />
+                  <DatePickerInput
+                    label="To Date"
+                    value={tempFilters.endDate}
+                    onDateChange={handleEndDateChange}
+                    placeholder="Select end date"
+                    minimumDate={tempFilters.startDate ? new Date(tempFilters.startDate) : new Date()}
+                  />
+                </View>
+              )}
+            </View>
             
             {/* Sezione Favorites */}
             <View style={styles.filterSection}>
@@ -258,6 +421,24 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#333',
     marginBottom: 15,
+  },
+  // Stili per le opzioni del filtro data
+  dateFilterOptions: {
+    marginBottom: 15,
+  },
+  dateFilterOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
+    backgroundColor: '#f9f9f9',
+    marginBottom: 8,
+  },
+  dateInputContainer: {
+    marginTop: 10,
   },
   favoriteOption: {
     flexDirection: 'row',

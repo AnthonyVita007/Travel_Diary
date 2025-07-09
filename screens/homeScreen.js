@@ -8,7 +8,7 @@ import NavBar from '../components/navBar';
 import CustomHeader from '../components/customHeader';
 import NoTripsAlert from '../components/noTripsAlert';
 
-export default function HomeScreen({ navigation, route }) { // <-- Aggiungi route per il refresh
+export default function HomeScreen({ navigation, route }) {
 
   //------------------------------------------------------------------------------------------------------------------------------------
   //STATI E VARIABILI
@@ -16,11 +16,15 @@ export default function HomeScreen({ navigation, route }) { // <-- Aggiungi rout
   // Stati per gestire la ricerca e i filtri
   const [search, setSearch] = useState('');
   const [filteredTrips, setFilteredTrips] = useState([]);
-  const [allTrips, setAllTrips] = useState([]); // <-- CAMBIATO: stato per tutti i viaggi
+  const [allTrips, setAllTrips] = useState([]);
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [activeFilters, setActiveFilters] = useState({
     showFavoritesOnly: false,
-    categories: []
+    categories: [],
+    // Nuovi filtri per data
+    dateFilterType: 'all',
+    startDate: '',
+    endDate: ''
   });
 
   //------------------------------------------------------------------------------------------------------------------------------------
@@ -32,7 +36,58 @@ export default function HomeScreen({ navigation, route }) { // <-- Aggiungi rout
     setAllTrips(trips);
   }, []);
 
-  // Funzione per applicare tutti i filtri (ricerca, favorites, categorie)
+  // Funzione per verificare se una data è nel range specificato
+  const isDateInRange = (dateToCheck, startDate, endDate) => {
+    const checkDate = new Date(dateToCheck);
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    return checkDate >= start && checkDate <= end;
+  };
+
+  // Funzione per applicare il filtro per data
+  const applyDateFilter = (trips) => {
+    const { dateFilterType, startDate, endDate } = activeFilters;
+    
+    if (dateFilterType === 'all') {
+      return trips;
+    }
+    
+    return trips.filter(trip => {
+      switch (dateFilterType) {
+        case 'departure':
+          // Filtra per data di partenza specifica
+          return startDate && trip.departureDate === startDate;
+          
+        case 'return':
+          // Filtra per data di ritorno specifica
+          return startDate && trip.returnDate === startDate;
+          
+        case 'range':
+          // Filtra per viaggi che si sovrappongono al range specificato
+          if (!startDate || !endDate) return false;
+          
+          // Un viaggio è incluso se:
+          // - La sua data di partenza è nel range, O
+          // - La sua data di ritorno è nel range, O  
+          // - Il viaggio "avvolge" completamente il range (parte prima e finisce dopo)
+          const tripStart = new Date(trip.departureDate);
+          const tripEnd = new Date(trip.returnDate);
+          const filterStart = new Date(startDate);
+          const filterEnd = new Date(endDate);
+          
+          return (
+            isDateInRange(trip.departureDate, startDate, endDate) ||
+            isDateInRange(trip.returnDate, startDate, endDate) ||
+            (tripStart <= filterStart && tripEnd >= filterEnd)
+          );
+          
+        default:
+          return true;
+      }
+    });
+  };
+
+  // Funzione per applicare tutti i filtri (ricerca, favorites, categorie, date)
   const applyAllFilters = useCallback(() => {
     let filtered = [...allTrips];
 
@@ -64,8 +119,11 @@ export default function HomeScreen({ navigation, route }) { // <-- Aggiungi rout
       });
     }
 
+    // Applica filtro per data
+    filtered = applyDateFilter(filtered);
+
     setFilteredTrips(filtered);
-  }, [allTrips, search, activeFilters]); // <-- CAMBIATO: dependencies corrette
+  }, [allTrips, search, activeFilters]);
 
   // Callback per il pulsante dei filtri
   const handleFilter = () => {
@@ -89,6 +147,7 @@ export default function HomeScreen({ navigation, route }) { // <-- Aggiungi rout
     if (activeFilters.categories && activeFilters.categories.length > 0) {
       count += activeFilters.categories.length;
     }
+    if (activeFilters.dateFilterType !== 'all') count++;
     return count;
   };
 
@@ -98,12 +157,12 @@ export default function HomeScreen({ navigation, route }) { // <-- Aggiungi rout
   // Effect per caricare i viaggi all'avvio e quando si torna dalla creazione/modifica
   useEffect(() => {
     loadTrips();
-  }, [loadTrips, route?.params?.refresh]); // <-- CAMBIATO: ascolta il parametro refresh
+  }, [loadTrips, route?.params?.refresh]);
 
   // Effect per applicare i filtri quando cambiano i parametri di ricerca o filtri
   useEffect(() => {
     applyAllFilters();
-  }, [applyAllFilters]); // <-- CAMBIATO: usa la funzione memoizzata
+  }, [applyAllFilters]);
 
   //--------------------------------------------------------------------------------------------------------------------------
   //RENDERING DELLA PAGINA
