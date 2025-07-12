@@ -8,4 +8,4 @@ L’obiettivo è sviluppare un’app multipiattaforma per registrare i propri vi
 - Vincenzo Goffredo - 0612708207
 - Antonio Radesca - 0612708145
 
-# Sito web documentazione - WIP
+# Documentazione e slides
