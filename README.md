@@ -9,3 +9,4 @@ L’obiettivo è sviluppare un’app multipiattaforma per registrare i propri vi
 - Antonio Radesca - 0612708145
 
 # Documentazione e slides
+La relazione di progetto e la presentazione sono presenti nella [cartella dedicata](https://github.com/AnthonyVita007/Travel_Diary/tree/main/Docs)
