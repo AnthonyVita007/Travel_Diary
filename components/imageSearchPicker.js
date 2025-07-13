@@ -303,7 +303,7 @@ const ImageSearchPicker = ({ label, value, onImageChange }) => {
 };
 
 //----------------------------------------------------------------------------------------------------------------------------------------
-// STILI (rimangono uguali)
+// STILI
 const styles = StyleSheet.create({
   container: {
     marginBottom: 16,
