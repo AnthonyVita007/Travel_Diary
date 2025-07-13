@@ -2,10 +2,6 @@ import React from 'react';
 import { View, TextInput, StyleSheet, Pressable } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-/**
- * Componente SearchBar
- * Visualizza una barra di ricerca con due icone cliccabili: lente di ingrandimento (ricerca) e filtri.
- */
 const SearchBar = ({
   value,
   onChangeText,
@@ -32,12 +28,12 @@ const SearchBar = ({
         returnKeyType="search"
       />
 
-      {/* Icona ricerca (lente d'ingrandimento), premibile */}
+      {/* Icona ricerca (lente d'ingrandimento) */}
       <Pressable style={styles.iconButton}>
         <Icon name="magnify" size={28} color="#333" />
       </Pressable>
 
-      {/* Icona filtri (tipica dei filtri), premibile */}
+      {/* Icona filtri, premibile */}
       <Pressable onPress={onFilterPress} style={styles.iconButton}>
         <View style={styles.filterIconContainer}>
           <Icon 
@@ -60,7 +56,6 @@ const SearchBar = ({
 //----------------------------------------------------------------------------------------------------------------------------------------
 // STILI
 const styles = StyleSheet.create({
-  // Stile container principale della searchbar
   container: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -75,7 +70,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.07,
     shadowRadius: 2,
   },
-  // Stile per la barra di input testo
   input: {
     flex: 1,
     fontSize: 16,
@@ -83,16 +77,13 @@ const styles = StyleSheet.create({
     paddingVertical: 0,
     paddingHorizontal: 8,
   },
-  // Stile per le icone cliccabili (ricerca e filtri)
   iconButton: {
     padding: 6,
     marginLeft: 4,
   },
-  // Stile per il container dell'icona filtri
   filterIconContainer: {
     position: 'relative',
   },
-  // Stile per il badge dei filtri attivi
   filterBadge: {
     position: 'absolute',
     top: -2,

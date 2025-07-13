@@ -10,7 +10,7 @@ const LocationInput = ({ label, value, onLocationChange, placeholder }) => {
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
 
-  // API key per OpenCage (puoi usare quella già presente nel progetto)
+  // API key per OpenCage
   const GEOCODING_API_KEY = '31119a4918f8431c95786c225f787420';
 
   //------------------------------------------------------------------------------------------------------------------------------------
@@ -94,7 +94,7 @@ const LocationInput = ({ label, value, onLocationChange, placeholder }) => {
         <Icon name="map-marker" size={24} color="#666" style={styles.icon} />
       </View>
       
-      {/* --- Lista suggerimenti senza FlatList - usa mapping semplice --- */}
+      {/* --- Lista suggerimenti senza FlatList (FlatList aveva problemi) --- */}
       {showSuggestions && suggestions.length > 0 && (
         <View style={styles.suggestionsContainer}>
           <View style={styles.suggestionsList}>
