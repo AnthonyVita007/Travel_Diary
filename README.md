@@ -1,4 +1,4 @@
-# Travel Diary App
+# Travelnello
 
 Travelnello è un’app sviluppata in React Native
 che permette di tenere traccia dei propri viaggi in
