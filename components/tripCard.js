@@ -13,7 +13,7 @@ const TripCard = ({ trip, handleTripPress }) => {
       {/* container interno sx */}
       <View style={styles.leftContainer}>
         <Image
-          source={typeof trip.image === 'number' ? trip.image : { uri: trip.image }} // <-- CORREZIONE
+          source={typeof trip.image === 'number' ? trip.image : { uri: trip.image }}
           style={styles.tripImage}
           resizeMode="cover"
         />

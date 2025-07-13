@@ -1,6 +1,10 @@
-# Travel Diary App
+# Travelnello
 
-Travel Diary è una moderna app multipiattaforma sviluppata per aiutarti a registrare, organizzare e rivivere i tuoi viaggi in modo semplice e intuitivo. Progettata per studenti di Mobile Programming (Gruppo 15), l'app unisce funzionalità avanzate e una UI accattivante per offrire la migliore esperienza di travel journaling.
+Travelnello è un’app sviluppata in React Native
+che permette di tenere traccia dei propri viaggi in
+giro per il mondo e di conservarne i ricordi, grazie
+alla possibilità di allegare foto e mantenere un
+diario di viaggio giorno per giorno.
 
 ## Funzionalità principali
 
