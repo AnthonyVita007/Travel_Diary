@@ -124,49 +124,51 @@ const DescriptionEditor = ({ label, value, onChangeText, placeholder, maxLength 
     <View style={styles.container}>
       <Text style={styles.label}>{label}</Text>
       
-      {/* --- Toolbar per la formattazione --- */}
+      {/* --- Toolbar più grande con pulsanti allineati in alto --- */}
       <View style={styles.toolbar}>
-        <Pressable 
-          style={[
-            styles.toolbarButton, 
-            isFormatActive('bold') && styles.activeToolbarButton
-          ]} 
-          onPress={() => applyFormatting('bold')}
-        >
-          <Icon 
-            name="format-bold" 
-            size={20} 
-            color={isFormatActive('bold') ? "#007AFF" : "#666"} 
-          />
-        </Pressable>
-        
-        <Pressable 
-          style={[
-            styles.toolbarButton, 
-            isFormatActive('italic') && styles.activeToolbarButton
-          ]} 
-          onPress={() => applyFormatting('italic')}
-        >
-          <Icon 
-            name="format-italic" 
-            size={20} 
-            color={isFormatActive('italic') ? "#007AFF" : "#666"} 
-          />
-        </Pressable>
-        
-        <Pressable style={styles.toolbarButton} onPress={() => applyFormatting('bullet')}>
-          <Icon name="format-list-bulleted" size={20} color="#666" />
-        </Pressable>
-        
-        {/* --- Contatore caratteri --- */}
-        <View style={styles.characterCount}>
-          <Text style={[
-            styles.countText,
-            value.length > maxLength * 0.9 && styles.warningText,
-            value.length >= maxLength && styles.errorText
-          ]}>
-            {value.length}/{maxLength}
-          </Text>
+        <View style={styles.toolbarContent}>
+          <Pressable 
+            style={[
+              styles.toolbarButton, 
+              isFormatActive('bold') && styles.activeToolbarButton
+            ]} 
+            onPress={() => applyFormatting('bold')}
+          >
+            <Icon 
+              name="format-bold" 
+              size={20} 
+              color={isFormatActive('bold') ? "#007AFF" : "#666"} 
+            />
+          </Pressable>
+          
+          <Pressable 
+            style={[
+              styles.toolbarButton, 
+              isFormatActive('italic') && styles.activeToolbarButton
+            ]} 
+            onPress={() => applyFormatting('italic')}
+          >
+            <Icon 
+              name="format-italic" 
+              size={20} 
+              color={isFormatActive('italic') ? "#007AFF" : "#666"} 
+            />
+          </Pressable>
+          
+          <Pressable style={styles.toolbarButton} onPress={() => applyFormatting('bullet')}>
+            <Icon name="format-list-bulleted" size={20} color="#666" />
+          </Pressable>
+          
+          {/* --- Contatore caratteri --- */}
+          <View style={styles.characterCount}>
+            <Text style={[
+              styles.countText,
+              value.length > maxLength * 0.9 && styles.warningText,
+              value.length >= maxLength && styles.errorText
+            ]}>
+              {value.length}/{maxLength}
+            </Text>
+          </View>
         </View>
       </View>
 
@@ -223,15 +225,20 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   toolbar: {
-    flexDirection: 'row',
-    alignItems: 'center',
     backgroundColor: '#f8f8f8',
-    padding: 8,
     borderTopLeftRadius: 8,
     borderTopRightRadius: 8,
     borderWidth: 1,
     borderBottomWidth: 0,
     borderColor: '#ddd',
+    height: 75,
+    paddingTop: 8,
+    paddingHorizontal: 8,
+  },
+  toolbarContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    height: 40,
   },
   toolbarButton: {
     padding: 8,

@@ -62,64 +62,64 @@ const ImageSearchPicker = ({ label, value, onImageChange }) => {
     const fallbackImages = [
       {
         id: 'local1',
-        url: require('../data/defaultImages/Travel_adventure.png'),
-        thumbnail: require('../data/defaultImages/Travel_adventure.png'),
+        url: require('../assets/defaultImages/Travel_adventure.png'),
+        thumbnail: require('../assets/defaultImages/Travel_adventure.png'),
         description: 'Travel adventure',
         photographer: 'Default',
         isLocal: true
       },
       {
         id: 'local2',
-        url: require('../data/defaultImages/Beautiful_beach.png'),
-        thumbnail: require('../data/defaultImages/Beautiful_beach.png'),
+        url: require('../assets/defaultImages/Beautiful_beach.png'),
+        thumbnail: require('../assets/defaultImages/Beautiful_beach.png'),
         description: 'Beautiful beach',
         photographer: 'Default',
         isLocal: true
       },
       {
         id: 'local3',
-        url: require('../data/defaultImages/Mountain_landscape.png'),
-        thumbnail: require('../data/defaultImages/Mountain_landscape.png'),
+        url: require('../assets/defaultImages/Mountain_landscape.png'),
+        thumbnail: require('../assets/defaultImages/Mountain_landscape.png'),
         description: 'Mountain landscape',
         photographer: 'Default',
         isLocal: true
       },
       {
         id: 'local4',
-        url: require('../data/defaultImages/City_skyline.png'),
-        thumbnail: require('../data/defaultImages/City_skyline.png'),
+        url: require('../assets/defaultImages/City_skyline.png'),
+        thumbnail: require('../assets/defaultImages/City_skyline.png'),
         description: 'City skyline',
         photographer: 'Default',
         isLocal: true
       },
       {
         id: 'local5',
-        url: require('../data/defaultImages/Forest_path.png'),
-        thumbnail: require('../data/defaultImages/Forest_path.png'),
+        url: require('../assets/defaultImages/Forest_path.png'),
+        thumbnail: require('../assets/defaultImages/Forest_path.png'),
         description: 'Forest path',
         photographer: 'Default',
         isLocal: true
       },
       {
         id: 'local6',
-        url: require('../data/defaultImages/Desert_landscape.png'),
-        thumbnail: require('../data/defaultImages/Desert_landscape.png'),
+        url: require('../assets/defaultImages/Desert_landscape.png'),
+        thumbnail: require('../assets/defaultImages/Desert_landscape.png'),
         description: 'Desert landscape',
         photographer: 'Default',
         isLocal: true
       },
       {
         id: 'local7',
-        url: require('../data/defaultImages/Adventure_hiking.png'),
-        thumbnail: require('../data/defaultImages/Adventure_hiking.png'),
+        url: require('../assets/defaultImages/Adventure_hiking.png'),
+        thumbnail: require('../assets/defaultImages/Adventure_hiking.png'),
         description: 'Adventure hiking',
         photographer: 'Default',
         isLocal: true
       },
       {
         id: 'local8',
-        url: require('../data/defaultImages/Museum.png'),
-        thumbnail: require('../data/defaultImages/Museum.png'),
+        url: require('../assets/defaultImages/Museum.png'),
+        thumbnail: require('../assets/defaultImages/Museum.png'),
         description: 'Cultural architecture',
         photographer: 'Default',
         isLocal: true

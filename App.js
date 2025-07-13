@@ -40,14 +40,14 @@ export default function App() {
   const preloadImages = async () => {
     try {
       const imageAssets = [
-        require('./data/defaultImages/Travel_adventure.png'),
-        require('./data/defaultImages/Beautiful_beach.png'),
-        require('./data/defaultImages/Mountain_landscape.png'),
-        require('./data/defaultImages/City_skyline.png'),
-        require('./data/defaultImages/Forest_path.png'),
-        require('./data/defaultImages/Desert_landscape.png'),
-        require('./data/defaultImages/Adventure_hiking.png'),
-        require('./data/defaultImages/Museum.png'),
+        require('./assets/defaultImages/Travel_adventure.png'),
+        require('./assets/defaultImages/Beautiful_beach.png'),
+        require('./assets/defaultImages/Mountain_landscape.png'),
+        require('./assets/defaultImages/City_skyline.png'),
+        require('./assets/defaultImages/Forest_path.png'),
+        require('./assets/defaultImages/Desert_landscape.png'),
+        require('./assets/defaultImages/Adventure_hiking.png'),
+        require('./assets/defaultImages/Museum.png'),
       ];
 
       await Asset.loadAsync(imageAssets);
